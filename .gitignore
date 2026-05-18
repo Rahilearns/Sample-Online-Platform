@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (if you ever add tooling)
+node_modules/
+
+# Local Claude Code config (not part of the site)
+.claude/
+
+# Local screenshots / scratch (not served)
+idlc-home.png
+idlc-home.jpg
+*.scratch

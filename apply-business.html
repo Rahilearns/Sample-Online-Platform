@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply: Business Loans — IDLC Finance</title>
+  <meta name="description" content="Choose between SME Loan and Corporate Loan." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=2" />
+</head>
+<body class="apply-page">
+
+  <div class="demo-ribbon" role="note">
+    <span data-i18n="demo_disclaimer">Educational prototype only — not affiliated with IDLC Finance PLC.</span>
+  </div>
+
+  <header class="apply-header">
+    <a href="index.html" class="brand" aria-label="IDLC Finance home">
+      <span class="brand-mark">I</span>
+      <span data-i18n="brand_name">IDLC</span>
+    </a>
+
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button data-lang="en" class="lang-btn active" type="button" aria-pressed="true">EN</button>
+      <button data-lang="bn" class="lang-btn" type="button" aria-pressed="false">বাং</button>
+    </div>
+  </header>
+
+  <main class="apply-main">
+    <a href="apply.html" class="back-link" data-i18n="back">← Back</a>
+    <span class="apply-eyebrow" data-i18n="loan_business">Loan for Businesses</span>
+    <h1 class="apply-title" data-i18n="choose_loan_type">Choose your loan type</h1>
+    <p class="apply-subtitle" data-i18n="choose_loan_sub">Pick a product to continue.</p>
+
+    <div class="loan-options">
+
+      <a href="#" class="loan-card loan-card--compact" aria-label="SME Loan">
+        <div class="loan-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8h18l-1.5-3h-15z"/>
+            <path d="M7 8v-3M12 8v-3M17 8v-3"/>
+            <path d="M4 8v13h16V8"/>
+            <rect x="10" y="13" width="4" height="8"/>
+          </svg>
+        </div>
+        <h2 data-i18n="prod_sme_loan">Loan for SME</h2>
+      </a>
+
+      <a href="#" class="loan-card loan-card--compact" aria-label="Corporate Loan">
+        <div class="loan-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="9" width="7" height="12"/>
+            <rect x="11" y="4" width="9" height="17"/>
+            <line x1="4.5" y1="12" x2="5.5" y2="12"/>
+            <line x1="7.5" y1="12" x2="8.5" y2="12"/>
+            <line x1="4.5" y1="15" x2="5.5" y2="15"/>
+            <line x1="7.5" y1="15" x2="8.5" y2="15"/>
+            <line x1="4.5" y1="18" x2="5.5" y2="18"/>
+            <line x1="7.5" y1="18" x2="8.5" y2="18"/>
+            <line x1="13" y1="7" x2="14" y2="7"/>
+            <line x1="16.5" y1="7" x2="17.5" y2="7"/>
+            <line x1="13" y1="10" x2="14" y2="10"/>
+            <line x1="16.5" y1="10" x2="17.5" y2="10"/>
+            <line x1="13" y1="13" x2="14" y2="13"/>
+            <line x1="16.5" y1="13" x2="17.5" y2="13"/>
+            <line x1="13" y1="16" x2="14" y2="16"/>
+            <line x1="16.5" y1="16" x2="17.5" y2="16"/>
+          </svg>
+        </div>
+        <h2 data-i18n="prod_corporate_loan">Loan for Corporates</h2>
+      </a>
+
+    </div>
+
+    <p class="apply-footer-note" data-i18n-html="footer_note_html">
+      Your information is encrypted and reviewed only by authorised officers. <strong>BB-regulated.</strong>
+    </p>
+  </main>
+
+  <script src="translations.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

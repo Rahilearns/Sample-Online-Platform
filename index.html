@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDLC Finance</title>
+  <meta name="description" content="Four decades of financing Bangladesh's futures — apply for a loan today." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=2" />
+</head>
+<body class="home-page">
+
+  <div class="demo-ribbon" role="note">
+    <span data-i18n="demo_disclaimer">Educational prototype only — not affiliated with IDLC Finance PLC.</span>
+  </div>
+
+  <!-- Language toggle (fixed top-right) -->
+  <div class="lang-toggle lang-toggle--floating" role="group" aria-label="Language">
+    <button data-lang="en" class="lang-btn active" type="button" aria-pressed="true">EN</button>
+    <button data-lang="bn" class="lang-btn" type="button" aria-pressed="false">বাং</button>
+  </div>
+
+  <!-- Home content — visually rich, but pointer-events: none so all clicks are dead -->
+  <div class="home-content" aria-hidden="true">
+
+    <!-- ============ Top nav ============ -->
+    <header class="site-nav">
+      <div class="site-nav-inner">
+        <div class="site-brand">
+          <span class="site-brand-mark">I</span>
+          <span class="site-brand-name" data-i18n="home_brand">IDLC</span>
+        </div>
+        <nav class="site-menu">
+          <a href="#" data-i18n="nav_about">About Us</a>
+          <a href="#" data-i18n="nav_why">Why Choose Us</a>
+          <a href="#" data-i18n="nav_news">News</a>
+          <a href="#" data-i18n="nav_career">Career</a>
+          <a href="#" data-i18n="nav_investor">Investor Relations</a>
+          <a href="#" data-i18n="nav_sustainability">Sustainability</a>
+        </nav>
+        <div class="site-nav-actions">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
+            </svg>
+          </span>
+          <span class="nav-login" data-i18n="home_nav_login">Login</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ Hero ============ -->
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+      </div>
+      <div class="hero-inner">
+        <div class="hero-text">
+          <span class="hero-eyebrow" data-i18n="hero_eyebrow">Four decades of trust</span>
+          <h1 class="hero-title" data-i18n="hero_title">Financing the futures of Bangladesh.</h1>
+          <p class="hero-sub" data-i18n="hero_sub">From your first home to your growing enterprise — the financial partner you can rely on, since 1985.</p>
+        </div>
+        <aside class="hero-card" aria-hidden="true">
+          <div class="hero-card-chart">
+            <svg viewBox="0 0 240 140" width="100%" height="140">
+              <defs>
+                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#DA1F26" stop-opacity="0.28"></stop>
+                  <stop offset="100%" stop-color="#DA1F26" stop-opacity="0"></stop>
+                </linearGradient>
+              </defs>
+              <path d="M0,110 L30,95 L60,100 L90,75 L120,80 L150,55 L180,60 L210,32 L240,40 L240,140 L0,140 Z" fill="url(#chartGrad)"></path>
+              <path d="M0,110 L30,95 L60,100 L90,75 L120,80 L150,55 L180,60 L210,32 L240,40" fill="none" stroke="#DA1F26" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+              <circle cx="210" cy="32" r="4" fill="#DA1F26"></circle>
+              <circle cx="210" cy="32" r="9" fill="none" stroke="#DA1F26" stroke-opacity="0.2" stroke-width="6"></circle>
+            </svg>
+          </div>
+          <div class="hero-card-stat">
+            <div class="hero-card-value">৳ 14,820 cr</div>
+            <div class="hero-card-label" data-i18n="hero_stat_label">Loans disbursed in 2025</div>
+            <div class="hero-card-meta" data-i18n="hero_stat_meta">Across retail, SME and corporate segments</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ Stat strip ============ -->
+    <section class="stat-strip">
+      <div class="stat-strip-inner">
+        <div class="stat-item"><span class="stat-num">40+</span><span class="stat-label" data-i18n="stat_years">Years of service</span></div>
+        <div class="stat-item"><span class="stat-num">AAA</span><span class="stat-label" data-i18n="stat_rating">Credit rating</span></div>
+        <div class="stat-item"><span class="stat-num">1M+</span><span class="stat-label" data-i18n="stat_customers">Customers served</span></div>
+        <div class="stat-item"><span class="stat-num">40+</span><span class="stat-label" data-i18n="stat_branches">Branches nationwide</span></div>
+      </div>
+    </section>
+
+    <!-- ============ Latest news ============ -->
+    <section class="section section-news">
+      <div class="section-inner">
+        <header class="section-head">
+          <h2 class="section-title" data-i18n="news_title">Latest news &amp; updates</h2>
+          <p class="section-sub" data-i18n="news_sub">Insights from our team and the wider financial sector.</p>
+        </header>
+        <div class="news-grid">
+
+          <article class="news-card">
+            <div class="news-thumb news-thumb-1"></div>
+            <div class="news-body">
+              <span class="news-date" data-i18n="news_1_date">12 May 2026</span>
+              <h3 data-i18n="news_1_title">Q1 2026 profit posts steady growth</h3>
+              <p data-i18n="news_1_desc">Solid earnings driven by retail loan expansion and stable deposit inflow.</p>
+              <span class="card-link" data-i18n="read_more">Read more →</span>
+            </div>
+          </article>
+
+          <article class="news-card">
+            <div class="news-thumb news-thumb-2"></div>
+            <div class="news-body">
+              <span class="news-date" data-i18n="news_2_date">28 Apr 2026</span>
+              <h3 data-i18n="news_2_title">Board declares 19% dividend for 2025</h3>
+              <p data-i18n="news_2_desc">Reflecting another year of consistent returns for our shareholders.</p>
+              <span class="card-link" data-i18n="read_more">Read more →</span>
+            </div>
+          </article>
+
+          <article class="news-card">
+            <div class="news-thumb news-thumb-3"></div>
+            <div class="news-body">
+              <span class="news-date" data-i18n="news_3_date">10 Apr 2026</span>
+              <h3 data-i18n="news_3_title">Annual investor summit lands in Dhaka</h3>
+              <p data-i18n="news_3_desc">Industry leaders, regulators and shareholders gather to chart the year ahead.</p>
+              <span class="card-link" data-i18n="read_more">Read more →</span>
+            </div>
+          </article>
+
+          <article class="news-card">
+            <div class="news-thumb news-thumb-4"></div>
+            <div class="news-body">
+              <span class="news-date" data-i18n="news_4_date">02 Apr 2026</span>
+              <h3 data-i18n="news_4_title">New green-finance facility launched</h3>
+              <p data-i18n="news_4_desc">Concessional financing for sustainable manufacturing and renewable energy projects.</p>
+              <span class="card-link" data-i18n="read_more">Read more →</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Why choose us ============ -->
+    <section class="section section-why">
+      <div class="section-inner">
+        <header class="section-head section-head--center">
+          <h2 class="section-title section-title--light" data-i18n="why_title">Why choose us?</h2>
+          <p class="section-sub section-sub--light" data-i18n="why_sub">Built on legacy. Powered by trust.</p>
+        </header>
+        <div class="why-grid">
+
+          <div class="why-card">
+            <div class="why-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18"></path><path d="M5 21V10l7-5 7 5v11"></path><path d="M9 21v-6h6v6"></path>
+              </svg>
+            </div>
+            <h3 data-i18n="why_1_title">Largest NBFI</h3>
+            <p data-i18n="why_1_desc">A leading non-banking financial institution by assets and reach.</p>
+          </div>
+
+          <div class="why-card">
+            <div class="why-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"></path>
+              </svg>
+            </div>
+            <h3 data-i18n="why_2_title">AAA Credit Rating</h3>
+            <p data-i18n="why_2_desc">Consistently rated AAA by reputed credit rating agencies.</p>
+          </div>
+
+          <div class="why-card">
+            <div class="why-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>
+              </svg>
+            </div>
+            <h3 data-i18n="why_3_title">Four decades of legacy</h3>
+            <p data-i18n="why_3_desc">Trusted by individuals and enterprises since 1985.</p>
+          </div>
+
+          <div class="why-card">
+            <div class="why-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12a10 10 0 11-5-8.66"></path><path d="M9 12l3 3 9-9"></path>
+              </svg>
+            </div>
+            <h3 data-i18n="why_4_title">Quick approvals</h3>
+            <p data-i18n="why_4_desc">Most applications receive a decision within 24 hours.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Quick links ============ -->
+    <section class="section">
+      <div class="section-inner">
+        <header class="section-head">
+          <h2 class="section-title" data-i18n="quick_title">Quick links</h2>
+          <p class="section-sub" data-i18n="quick_sub">Handy tools and resources for our customers.</p>
+        </header>
+        <div class="quick-grid">
+
+          <article class="quick-card">
+            <div class="quick-thumb quick-thumb-1">MBR</div>
+            <h3 data-i18n="qlink_1">Monthly Business Review</h3>
+            <p data-i18n="qlink_1_desc">Our flagship publication for sector and economic insights.</p>
+            <span class="card-link" data-i18n="read_now">Read now →</span>
+          </article>
+
+          <article class="quick-card">
+            <div class="quick-thumb quick-thumb-2">Career</div>
+            <h3 data-i18n="qlink_2">Careers at IDLC</h3>
+            <p data-i18n="qlink_2_desc">Build your career with one of Bangladesh's most trusted financial brands.</p>
+            <span class="card-link" data-i18n="view_openings">View openings →</span>
+          </article>
+
+          <article class="quick-card">
+            <div class="quick-thumb quick-thumb-3">Portal</div>
+            <h3 data-i18n="qlink_3">Customer Portal</h3>
+            <p data-i18n="qlink_3_desc">Manage your account, view statements and pay EMIs online.</p>
+            <span class="card-link" data-i18n="sign_in">Sign in →</span>
+          </article>
+
+          <article class="quick-card quick-card-stock">
+            <div class="stock-head" data-i18n="qlink_4">IDLC Finance PLC</div>
+            <div class="stock-rows">
+              <div class="stock-row"><span data-i18n="stock_open">Open</span><strong>36.50</strong></div>
+              <div class="stock-row"><span data-i18n="stock_high">High</span><strong>36.90</strong></div>
+              <div class="stock-row"><span data-i18n="stock_change">Change</span><strong class="stock-up">+0.40</strong></div>
+            </div>
+            <span class="card-link" data-i18n="view_full">View full report →</span>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Footer ============ -->
+    <footer class="home-footer">
+      <div class="footer-illustration" aria-hidden="true">
+        <svg viewBox="0 0 1200 110" preserveAspectRatio="xMidYEnd meet" width="100%" height="110">
+          <rect x="0" y="80" width="1200" height="30" fill="#e9efe8"></rect>
+          <g fill="#cfdccc" opacity="0.95">
+            <rect x="40"  y="40" width="60" height="40"></rect>
+            <rect x="110" y="20" width="50" height="60"></rect>
+            <rect x="170" y="50" width="80" height="30"></rect>
+            <rect x="260" y="30" width="60" height="50"></rect>
+            <rect x="330" y="55" width="70" height="25"></rect>
+            <rect x="410" y="40" width="50" height="40"></rect>
+            <rect x="470" y="25" width="70" height="55"></rect>
+            <rect x="550" y="50" width="60" height="30"></rect>
+            <rect x="620" y="35" width="70" height="45"></rect>
+            <rect x="700" y="45" width="50" height="35"></rect>
+            <rect x="760" y="20" width="80" height="60"></rect>
+            <rect x="850" y="50" width="60" height="30"></rect>
+            <rect x="920" y="35" width="70" height="45"></rect>
+            <rect x="1000" y="50" width="60" height="30"></rect>
+            <rect x="1070" y="30" width="90" height="50"></rect>
+          </g>
+          <g fill="#DA1F26" opacity="0.75">
+            <circle cx="200" cy="92" r="6"></circle>
+            <circle cx="216" cy="92" r="6"></circle>
+            <path d="M180 92 h60" stroke="#DA1F26" stroke-width="2"></path>
+            <circle cx="900" cy="92" r="6"></circle>
+            <circle cx="916" cy="92" r="6"></circle>
+            <path d="M880 92 h60" stroke="#DA1F26" stroke-width="2"></path>
+          </g>
+        </svg>
+      </div>
+      <div class="footer-inner">
+        <div class="footer-col">
+          <h4 data-i18n="footer_resources">Resources</h4>
+          <ul>
+            <li><a href="#" data-i18n="res_apply">Apply for Loan</a></li>
+            <li><a href="#" data-i18n="res_status">Application Status</a></li>
+            <li><a href="#" data-i18n="res_calc">EMI Calculator</a></li>
+            <li><a href="#" data-i18n="res_portal">Customer Portal</a></li>
+            <li><a href="#" data-i18n="res_branch">Branch Locator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer_about">About Us</h4>
+          <ul>
+            <li><a href="#" data-i18n="footer_story">Our Story</a></li>
+            <li><a href="#" data-i18n="footer_management">Management</a></li>
+            <li><a href="#" data-i18n="footer_reports">Annual Reports</a></li>
+            <li><a href="#" data-i18n="footer_sustainability">Sustainability</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer_quick">Quick Links</h4>
+          <ul>
+            <li><a href="#" data-i18n="footer_contact">Contact Us</a></li>
+            <li><a href="#" data-i18n="footer_faq">FAQ</a></li>
+            <li><a href="#" data-i18n="footer_grievance">Grievance Cell</a></li>
+            <li><a href="#" data-i18n="footer_terms">Terms &amp; Conditions</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-col-wide">
+          <h4 data-i18n="footer_location">Location</h4>
+          <div class="footer-map" aria-hidden="true">
+            <div class="footer-map-grid">
+              <div class="footer-map-road"></div>
+              <div class="footer-map-pin">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="#DA1F26"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"></path></svg>
+              </div>
+            </div>
+          </div>
+          <p class="footer-address" data-i18n="footer_address">Bay's Galleria, 57 Gulshan Avenue, Dhaka 1212, Bangladesh</p>
+          <p class="footer-contact">
+            <span data-i18n="footer_phone">+880 9612 311 311</span> · <span data-i18n="footer_email">info@idlc.com</span>
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span data-i18n="footer_copyright">© 2026 IDLC Finance PLC. All rights reserved.</span>
+        <div class="footer-social">
+          <span data-i18n="follow_us">Follow us</span>
+          <span class="footer-social-icons">
+            <span aria-label="Facebook">f</span>
+            <span aria-label="LinkedIn">in</span>
+            <span aria-label="YouTube">▶</span>
+          </span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Floating action buttons -->
+  <div class="floating-actions" role="region" aria-label="Quick actions">
+    <a href="#"
+       class="fab fab-secondary"
+       id="customerLogin"
+       role="button"
+       data-i18n="login">Customer Login</a>
+
+    <a href="apply.html"
+       class="fab fab-primary"
+       id="applyForLoan"
+       data-i18n="apply">Apply for Loan</a>
+  </div>
+
+  <script src="translations.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
