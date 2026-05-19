@@ -61,6 +61,7 @@ window.TRANSLATIONS = {
     // OTP flow
     field_name: "Name",
     field_nid: "NID",
+    field_dob: "Date of Birth",
     field_phone: "Phone Number",
     request_otp: "Request OTP",
     submit_otp: "Submit OTP",
@@ -86,6 +87,7 @@ window.TRANSLATIONS = {
     // Info tooltips
     info_name: "Your full name as it appears on your NID.",
     info_nid: "Your 10, 13 or 17-digit National ID number, or 17-digit Birth Certificate number.",
+    info_dob: "Your date of birth as per NID. Applicants must be at least 18 years old.",
     info_phone: "Active mobile number where we'll send the OTP.",
     info_cif: "Your IDLC Customer ID — found on your IDLC account statement or available from your branch.",
     info_branch: "The IDLC branch nearest your address — your application will be routed there.",
@@ -287,6 +289,7 @@ window.TRANSLATIONS = {
     // OTP flow
     field_name: "নাম",
     field_nid: "এনআইডি",
+    field_dob: "জন্ম তারিখ",
     field_phone: "ফোন নম্বর",
     request_otp: "ওটিপি অনুরোধ করুন",
     submit_otp: "ওটিপি জমা দিন",
@@ -312,6 +315,7 @@ window.TRANSLATIONS = {
     // Info tooltips
     info_name: "এনআইডি অনুযায়ী আপনার পূর্ণ নাম।",
     info_nid: "আপনার ১০, ১৩ বা ১৭-ডিজিটের জাতীয় পরিচয়পত্র বা ১৭-ডিজিটের জন্ম নিবন্ধন নম্বর।",
+    info_dob: "এনআইডি অনুযায়ী আপনার জন্ম তারিখ। আবেদনকারীর বয়স কমপক্ষে ১৮ বছর হতে হবে।",
     info_phone: "যে সচল মোবাইল নম্বরে আমরা ওটিপি পাঠাব।",
     info_cif: "আপনার আইডিএলসি গ্রাহক নম্বর — অ্যাকাউন্ট স্টেটমেন্ট বা শাখা থেকে নিন।",
     info_branch: "আপনার ঠিকানার সবচেয়ে কাছের আইডিএলসি শাখা।",

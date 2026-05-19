@@ -150,6 +150,25 @@
     return "IDLC-" + yy + mm + dd + "-" + rand;
   }
 
+  // ============ DOB picker bounds (18+ to 100 years old) ============
+  function initDobBounds() {
+    var dob = document.querySelector('#otpForm input[name="dob"]');
+    if (!dob) return;
+    function fmt(d) {
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1);
+      var da = String(d.getDate());
+      if (m.length < 2) m = "0" + m;
+      if (da.length < 2) da = "0" + da;
+      return y + "-" + m + "-" + da;
+    }
+    var today = new Date();
+    var max = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    var min = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+    dob.setAttribute("max", fmt(max));
+    dob.setAttribute("min", fmt(min));
+  }
+
   // ============ OTP gate & multi-stage form ============
   function initOtpFlow() {
     var otpForm = $("otpForm");
@@ -195,12 +214,31 @@
           showToast("Please enter a valid NID number (10, 13, or 17 digits).", true);
           return;
         }
+        var dobInput = otpForm.querySelector('input[name="dob"]');
+        if (dobInput) {
+          if (!dobInput.value) {
+            dobInput.focus();
+            showToast("Please enter your date of birth.", true);
+            return;
+          }
+          var dob = new Date(dobInput.value);
+          var today = new Date();
+          var age = today.getFullYear() - dob.getFullYear();
+          var monthDiff = today.getMonth() - dob.getMonth();
+          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) age--;
+          if (isNaN(dob.getTime()) || age < 18 || age > 100) {
+            dobInput.focus();
+            showToast("Applicant must be at least 18 years old.", true);
+            return;
+          }
+        }
         if (!/^01[0-9]{9}$/.test(phoneInput.value)) {
           phoneInput.focus();
           showToast("Please enter a valid Bangladeshi mobile number (01XXXXXXXXX).", true);
           return;
         }
         if (nidInput) nidInput.setAttribute("readonly", "");
+        if (dobInput) dobInput.setAttribute("readonly", "");
         phoneInput.setAttribute("readonly", "");
         otpGroup.hidden = false;
         otpError.hidden = true;
@@ -331,6 +369,7 @@
         btn.addEventListener("click", function () { setTimeout(calcEMI, 60); });
       });
     }
+    initDobBounds();
     initOtpFlow();
     initExistingToggle();
     initInfoButtons();
