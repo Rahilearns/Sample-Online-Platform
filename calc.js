@@ -155,7 +155,6 @@
     var otpForm = $("otpForm");
     if (!otpForm) return;
 
-    var nameInput  = otpForm.querySelector('input[name="name"]');
     var phoneInput = otpForm.querySelector('input[name="phone"]');
     var otpGroup   = otpForm.querySelector(".otp-group");
     var otpBoxes   = otpForm.querySelectorAll(".otp-boxes input");
@@ -190,11 +189,6 @@
       var dict = getDict();
 
       if (stage === "request") {
-        if (!nameInput.value.trim()) {
-          nameInput.focus();
-          showToast("Please enter your name.", true);
-          return;
-        }
         var nidInput = otpForm.querySelector('input[name="nid"]');
         if (nidInput && !/^[0-9]{10,17}$/.test(nidInput.value.trim())) {
           nidInput.focus();
@@ -206,7 +200,6 @@
           showToast("Please enter a valid Bangladeshi mobile number (01XXXXXXXXX).", true);
           return;
         }
-        nameInput.setAttribute("readonly", "");
         if (nidInput) nidInput.setAttribute("readonly", "");
         phoneInput.setAttribute("readonly", "");
         otpGroup.hidden = false;
