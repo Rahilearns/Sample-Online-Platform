@@ -31,6 +31,7 @@
     <a href="apply-individual.html" class="back-link" data-i18n="back">← Back</a>
     <span class="apply-eyebrow" data-i18n="prod_home_loan">Home Loan</span>
     <h1 class="apply-title" data-i18n="prod_apply_home">Apply for a Home Loan</h1>
+    <div class="context-chip" id="contextChip"></div>
 
     <div class="product-layout">
 
@@ -139,13 +140,21 @@
         <section class="loan-form-card">
           <h2 data-i18n="form_application">Application Form</h2>
 
-          <!-- Stage 1 & 2: Name + Phone + OTP gate -->
+          <!-- Stage 1 & 2: OTP gate — 4 mandatory fields -->
           <form id="otpForm" class="loan-form" novalidate>
             <input type="hidden" name="product" value="home-loan" />
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_nid">NID</span>
+                <span class="req"><span data-i18n="field_name">Name</span></span>
+                <button type="button" class="info-btn" data-info="info_name" aria-label="More info">i</button>
+              </div>
+              <input type="text" name="name" autocomplete="name" required />
+            </div>
+
+            <div class="form-group">
+              <div class="field-label">
+                <span class="req"><span data-i18n="field_nid">NID</span></span>
                 <button type="button" class="info-btn" data-info="info_nid" aria-label="More info">i</button>
               </div>
               <input type="text" name="nid" inputmode="numeric" pattern="[0-9]{10,17}" required />
@@ -153,7 +162,7 @@
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_dob">Date of Birth</span>
+                <span class="req"><span data-i18n="field_dob">Date of Birth</span></span>
                 <button type="button" class="info-btn" data-info="info_dob" aria-label="More info">i</button>
               </div>
               <input type="date" name="dob" required />
@@ -161,7 +170,7 @@
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_phone">Phone Number</span>
+                <span class="req"><span data-i18n="field_phone">Phone Number</span></span>
                 <button type="button" class="info-btn" data-info="info_phone" aria-label="More info">i</button>
               </div>
               <input type="tel" name="phone" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" required />
@@ -185,6 +194,8 @@
           <!-- Stage 3: Full loan-application form (revealed after OTP) -->
           <form id="loanForm" class="loan-form" hidden novalidate>
             <input type="hidden" name="product" value="home-loan" />
+            <input type="hidden" name="purpose" value="" />
+            <input type="hidden" name="financingMode" value="" />
 
             <div class="form-progress" aria-hidden="true">
               <div class="form-progress-track">
@@ -193,23 +204,15 @@
               <span class="form-progress-text" id="formProgressText">0%</span>
             </div>
 
-            <div class="form-question">
-              <span class="form-question-text" data-i18n="field_existing_customer">Are you an existing customer of IDLC?</span>
-              <div class="form-radio-group">
-                <label><input type="radio" name="existing" value="yes" required /> <span data-i18n="yes">Yes</span></label>
-                <label><input type="radio" name="existing" value="no" required /> <span data-i18n="no">No</span></label>
-              </div>
-            </div>
-
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_name">Name</span>
+                <span class="req"><span data-i18n="field_name">Name</span></span>
                 <button type="button" class="info-btn" data-info="info_name" aria-label="More info">i</button>
               </div>
               <input type="text" name="name" autocomplete="name" required />
             </div>
 
-            <div class="form-group" id="cifGroup" hidden>
+            <div class="form-group">
               <div class="field-label">
                 <span data-i18n="field_cif">Customer No. (CIF)</span>
                 <button type="button" class="info-btn" data-info="info_cif" aria-label="More info">i</button>
@@ -219,15 +222,7 @@
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_branch">Nearest IDLC Branch</span>
-                <button type="button" class="info-btn" data-info="info_branch" aria-label="More info">i</button>
-              </div>
-              <input type="text" name="branch" required />
-            </div>
-
-            <div class="form-group">
-              <div class="field-label">
-                <span data-i18n="field_email_app">Email</span>
+                <span class="req"><span data-i18n="field_email_app">Email</span></span>
                 <button type="button" class="info-btn" data-info="info_email" aria-label="More info">i</button>
               </div>
               <input type="email" name="email" autocomplete="email" required />
@@ -235,7 +230,7 @@
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_profession_app">Profession</span>
+                <span class="req"><span data-i18n="field_profession_app">Profession</span></span>
                 <button type="button" class="info-btn" data-info="info_profession" aria-label="More info">i</button>
               </div>
               <select name="profession" required>
@@ -249,51 +244,53 @@
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_experience">Total Professional Experience (years)</span>
-                <button type="button" class="info-btn" data-info="info_experience" aria-label="More info">i</button>
-              </div>
-              <input type="text" inputmode="numeric" name="experience" min="0" max="60" required />
-            </div>
-
-            <div class="form-group">
-              <div class="field-label">
-                <span data-i18n="field_income_app">Total Monthly Income (BDT)</span>
+                <span class="req"><span data-i18n="field_income_app">Total Monthly Income (BDT)</span></span>
                 <button type="button" class="info-btn" data-info="info_income" aria-label="More info">i</button>
               </div>
-              <input type="text" inputmode="numeric" name="income" min="0" inputmode="numeric" required />
+              <input type="text" name="income" inputmode="numeric" required />
             </div>
 
-            <div class="form-group">
-              <div class="field-label">
-                <span data-i18n="field_existing_loan">Existing Loan Amount (BDT)</span>
-                <button type="button" class="info-btn" data-info="info_existing_loan" aria-label="More info">i</button>
+            <div class="form-question">
+              <span class="form-question-text req"><span data-i18n="field_has_burden">Do you have any loan burden currently?</span></span>
+              <div class="form-radio-group">
+                <label><input type="radio" name="hasBurden" value="yes" required /> <span data-i18n="yes">Yes</span></label>
+                <label><input type="radio" name="hasBurden" value="no" required /> <span data-i18n="no">No</span></label>
               </div>
-              <input type="text" inputmode="numeric" name="existingLoan" min="0" inputmode="numeric" value="0" />
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="burdenGroup" hidden>
               <div class="field-label">
-                <span data-i18n="field_loan_burden">Total Monthly Loan Burden (BDT)</span>
+                <span class="req"><span data-i18n="field_monthly_burden">Monthly Loan Burden (BDT)</span></span>
                 <button type="button" class="info-btn" data-info="info_loan_burden" aria-label="More info">i</button>
               </div>
-              <input type="text" inputmode="numeric" name="loanBurden" min="0" inputmode="numeric" value="0" />
+              <input type="text" name="loanBurden" inputmode="numeric" />
             </div>
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_expected_amount">Expected Loan Amount (BDT)</span>
+                <span class="req"><span data-i18n="field_expected_amount_idlc">Expected Loan Amount from IDLC (BDT)</span></span>
                 <button type="button" class="info-btn" data-info="info_amount" aria-label="More info">i</button>
               </div>
-              <input type="text" inputmode="numeric" name="amount" min="0" inputmode="numeric" required />
+              <input type="text" name="amount" inputmode="numeric" required />
             </div>
 
             <div class="form-group">
               <div class="field-label">
-                <span data-i18n="field_tenor_app">Tenor (years)</span>
+                <span class="req"><span data-i18n="field_loan_term">Loan Term (years)</span></span>
                 <button type="button" class="info-btn" data-info="info_tenor" aria-label="More info">i</button>
               </div>
-              <input type="text" inputmode="numeric" name="tenor" min="1" max="25" required />
+              <input type="text" name="tenor" inputmode="numeric" required />
             </div>
+
+            <label class="form-terms">
+              <input type="checkbox" name="declaration1" required />
+              <span data-i18n="declaration_1">I declare that the information provided above is true and provided in my sound mind.</span>
+            </label>
+
+            <label class="form-terms">
+              <input type="checkbox" name="declaration2" required />
+              <span data-i18n="declaration_2">I hereby authorize IDLC to obtain my credit information from Credit Information Bureau of Bangladesh Bank and authorize IDLC to use all the information in processing the applied loan.</span>
+            </label>
 
             <button type="submit" class="btn-submit" data-i18n="form_submit">Submit Application</button>
           </form>
@@ -308,6 +305,12 @@
             </div>
             <h3 class="form-success-title" data-i18n="form_success_title">Application Received</h3>
             <p class="form-success-msg" data-i18n="form_success_msg">Your application has been received. An IDLC representative will contact you within 8 working hours.</p>
+            <div class="form-success-tracking">
+              <span class="form-success-tracking-label" data-i18n="tracking_label">Your tracking number</span>
+              <code class="form-success-tracking-code" id="trackingNumber">—</code>
+              <span class="form-success-tracking-hint" data-i18n="tracking_hint">Save this number to check your application status online.</span>
+            </div>
+            <a href="apply.html" class="btn-submit-another" data-i18n="submit_another">Submit Another Application</a>
           </div>
         </section>
 

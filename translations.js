@@ -109,6 +109,52 @@ window.TRANSLATIONS = {
     tracking_hint: "Save this number to check your application status online.",
     submit_another: "Submit Another Application",
 
+    // Pre-filter modal
+    modal_title_home: "Tell us about your Home Loan",
+    modal_title_car: "Tell us about your Car Loan",
+    modal_title_personal: "Tell us about your Personal Loan",
+    modal_sub: "Help us route your application to the right team.",
+    modal_purpose_label: "Purpose of the Loan",
+    modal_purpose_select: "Select purpose...",
+    modal_financing_label: "Financing Mode",
+    modal_financing_select: "Select mode...",
+    modal_financing_conventional: "Conventional",
+    modal_financing_islamic: "Islamic",
+    modal_proceed: "Proceed",
+    modal_close: "Close",
+
+    // Purposes (Home Loan)
+    purpose_home_construction: "Building Construction",
+    purpose_home_apartment: "Apartment Purchase",
+    purpose_home_commercial: "Commercial Space Purchase",
+    purpose_home_affordable: "Affordable Home Loan",
+    purpose_home_equity: "Home Equity",
+    purpose_home_semipaka: "Semi Paka House Purchase/Construction",
+
+    // Purposes (Car Loan)
+    purpose_car_personal: "Car Purchase for Personal Use",
+
+    // Purposes (Personal Loan)
+    purpose_personal_durables: "Consumer Durables",
+    purpose_personal_renovation: "Home Renovation",
+    purpose_personal_obligations: "Financial Obligations",
+    purpose_personal_marriage: "Self/Family Marriage",
+    purpose_personal_education: "Education Expenses",
+    purpose_personal_travel: "Travel Expenses",
+    purpose_personal_medical: "Medical Expenses",
+    purpose_personal_other: "Other Personal Needs",
+
+    // Restructured post-OTP form
+    field_has_burden: "Do you have any loan burden currently?",
+    field_monthly_burden: "Monthly Loan Burden (BDT)",
+    field_expected_amount_idlc: "Expected Loan Amount from IDLC (BDT)",
+    field_loan_term: "Loan Term (years)",
+
+    // Declarations (replace single T&C)
+    declaration_1: "I declare that the information provided above is true and provided in my sound mind.",
+    declaration_2: "I hereby authorize IDLC to obtain my credit information from Credit Information Bureau of Bangladesh Bank and authorize IDLC to use all the information in processing the applied loan.",
+    declarations_required: "Please accept both declarations to continue.",
+
     // ===== Home: Nav =====
     nav_about: "About Us",
     nav_how: "How it Works",
@@ -336,6 +382,52 @@ window.TRANSLATIONS = {
     tracking_label: "আপনার ট্র্যাকিং নম্বর",
     tracking_hint: "অনলাইনে আবেদনের অগ্রগতি দেখতে এই নম্বরটি সংরক্ষণ করুন।",
     submit_another: "আরেকটি আবেদন করুন",
+
+    // Pre-filter modal
+    modal_title_home: "আপনার গৃহ ঋণ সম্পর্কে বলুন",
+    modal_title_car: "আপনার গাড়ি ঋণ সম্পর্কে বলুন",
+    modal_title_personal: "আপনার ব্যক্তিগত ঋণ সম্পর্কে বলুন",
+    modal_sub: "সঠিক টিমে আপনার আবেদন রাউট করতে আমাদের সাহায্য করুন।",
+    modal_purpose_label: "ঋণের উদ্দেশ্য",
+    modal_purpose_select: "উদ্দেশ্য নির্বাচন করুন...",
+    modal_financing_label: "অর্থায়ন পদ্ধতি",
+    modal_financing_select: "নির্বাচন করুন...",
+    modal_financing_conventional: "প্রচলিত",
+    modal_financing_islamic: "ইসলামিক",
+    modal_proceed: "এগিয়ে যান",
+    modal_close: "বন্ধ করুন",
+
+    // Purposes (Home Loan)
+    purpose_home_construction: "বাড়ি নির্মাণ",
+    purpose_home_apartment: "অ্যাপার্টমেন্ট ক্রয়",
+    purpose_home_commercial: "বাণিজ্যিক স্পেস ক্রয়",
+    purpose_home_affordable: "সাশ্রয়ী গৃহ ঋণ",
+    purpose_home_equity: "হোম ইক্যুইটি",
+    purpose_home_semipaka: "আধাপাকা বাড়ি ক্রয়/নির্মাণ",
+
+    // Purposes (Car Loan)
+    purpose_car_personal: "ব্যক্তিগত ব্যবহারের জন্য গাড়ি ক্রয়",
+
+    // Purposes (Personal Loan)
+    purpose_personal_durables: "ভোক্তা টেকসই পণ্য",
+    purpose_personal_renovation: "গৃহ সংস্কার",
+    purpose_personal_obligations: "আর্থিক বাধ্যবাধকতা",
+    purpose_personal_marriage: "নিজের/পরিবারের বিবাহ",
+    purpose_personal_education: "শিক্ষা ব্যয়",
+    purpose_personal_travel: "ভ্রমণ ব্যয়",
+    purpose_personal_medical: "চিকিৎসা ব্যয়",
+    purpose_personal_other: "অন্যান্য ব্যক্তিগত প্রয়োজন",
+
+    // Restructured post-OTP form
+    field_has_burden: "আপনার কি বর্তমানে কোনো ঋণের চাপ আছে?",
+    field_monthly_burden: "মাসিক ঋণের চাপ (টাকা)",
+    field_expected_amount_idlc: "আইডিএলসি থেকে প্রত্যাশিত ঋণের পরিমাণ (টাকা)",
+    field_loan_term: "ঋণের মেয়াদ (বছর)",
+
+    // Declarations (replace single T&C)
+    declaration_1: "আমি ঘোষণা করছি যে উপরে প্রদত্ত তথ্য সঠিক এবং সুস্থ মস্তিষ্কে প্রদান করা হয়েছে।",
+    declaration_2: "আমি এতদ্বারা আইডিএলসি-কে বাংলাদেশ ব্যাংকের ক্রেডিট ইনফরমেশন ব্যুরো থেকে আমার ক্রেডিট তথ্য সংগ্রহ এবং আবেদনকৃত ঋণ প্রক্রিয়াকরণে ব্যবহারের জন্য অনুমতি প্রদান করছি।",
+    declarations_required: "এগিয়ে যেতে অনুগ্রহ করে দুটি ঘোষণাই গ্রহণ করুন।",
 
     // ===== Home: Nav =====
     nav_about: "আমাদের সম্পর্কে",

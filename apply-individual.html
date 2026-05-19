@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body class="apply-page">
 
@@ -36,7 +36,7 @@
 
     <div class="loan-options">
 
-      <a href="apply-home-loan.html" class="loan-card loan-card--compact" aria-label="Home Loan">
+      <a href="apply-home-loan.html" class="loan-card loan-card--compact" data-product="home-loan" aria-label="Home Loan">
         <div class="loan-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 11l9-8 9 8"/>
@@ -48,7 +48,7 @@
         <h2 data-i18n="prod_home_loan">Home Loan</h2>
       </a>
 
-      <a href="apply-car-loan.html" class="loan-card loan-card--compact" aria-label="Car Loan">
+      <a href="apply-car-loan.html" class="loan-card loan-card--compact" data-product="car-loan" aria-label="Car Loan">
         <div class="loan-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 15h18v3h-2a1.5 1.5 0 0 1-3 0H8a1.5 1.5 0 0 1-3 0H3v-3z"/>
@@ -60,7 +60,7 @@
         <h2 data-i18n="prod_car_loan">Car Loan</h2>
       </a>
 
-      <a href="apply-personal-loan.html" class="loan-card loan-card--compact" aria-label="Personal Loan">
+      <a href="apply-personal-loan.html" class="loan-card loan-card--compact" data-product="personal-loan" aria-label="Personal Loan">
         <div class="loan-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="6" width="20" height="12" rx="1.5"/>
@@ -79,7 +79,193 @@
     </p>
   </main>
 
+  <!-- ============ Pre-filter modal ============ -->
+  <div class="modal-backdrop" id="loanModal" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button type="button" class="modal-close" id="modalClose" aria-label="Close" data-i18n-attr="aria-label:modal_close">×</button>
+      <div class="modal-sketch" id="modalSketch" aria-hidden="true"></div>
+      <h2 class="modal-title" id="modalTitle">Tell us about your loan</h2>
+      <p class="modal-sub" data-i18n="modal_sub">Help us route your application to the right team.</p>
+
+      <div class="modal-field">
+        <label for="modalPurpose" data-i18n="modal_purpose_label">Purpose of the Loan</label>
+        <select id="modalPurpose"></select>
+      </div>
+
+      <div class="modal-field">
+        <label for="modalMode" data-i18n="modal_financing_label">Financing Mode</label>
+        <select id="modalMode">
+          <option value="" data-i18n="modal_financing_select">Select mode...</option>
+          <option value="Conventional" data-i18n="modal_financing_conventional">Conventional</option>
+          <option value="Islamic" data-i18n="modal_financing_islamic">Islamic</option>
+        </select>
+      </div>
+
+      <button type="button" class="btn-submit modal-proceed" id="modalProceed" data-i18n="modal_proceed">Proceed</button>
+    </div>
+  </div>
+
   <script src="translations.js"></script>
   <script src="app.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var PURPOSES = {
+        "home-loan": [
+          { value: "Building Construction", key: "purpose_home_construction" },
+          { value: "Apartment Purchase", key: "purpose_home_apartment" },
+          { value: "Commercial Space Purchase", key: "purpose_home_commercial" },
+          { value: "Affordable Home Loan", key: "purpose_home_affordable" },
+          { value: "Home Equity", key: "purpose_home_equity" },
+          { value: "Semi Paka House Purchase/Construction", key: "purpose_home_semipaka" }
+        ],
+        "car-loan": [
+          { value: "Car Purchase for Personal Use", key: "purpose_car_personal" }
+        ],
+        "personal-loan": [
+          { value: "Consumer Durables", key: "purpose_personal_durables" },
+          { value: "Home Renovation", key: "purpose_personal_renovation" },
+          { value: "Financial Obligations", key: "purpose_personal_obligations" },
+          { value: "Self/Family Marriage", key: "purpose_personal_marriage" },
+          { value: "Education Expenses", key: "purpose_personal_education" },
+          { value: "Travel Expenses", key: "purpose_personal_travel" },
+          { value: "Medical Expenses", key: "purpose_personal_medical" },
+          { value: "Other Personal Needs", key: "purpose_personal_other" }
+        ]
+      };
+
+      var SKETCHES = {
+        "home-loan":
+          '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M15 60 L60 22 L105 60"/>' +
+          '<path d="M25 56 V100 H95 V56"/>' +
+          '<rect x="52" y="68" width="20" height="32"/>' +
+          '<rect x="76" y="64" width="14" height="14"/>' +
+          '<line x1="86" y1="33" x2="86" y2="50"/>' +
+          '<line x1="82" y1="33" x2="92" y2="33"/>' +
+          '<line x1="82" y1="33" x2="82" y2="46"/>' +
+          '<line x1="92" y1="33" x2="92" y2="46"/>' +
+          '</svg>',
+        "car-loan":
+          '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M10 80 H110 V94 H103 a8 8 0 0 1 -16 0 H33 a8 8 0 0 1 -16 0 H10 V80 Z"/>' +
+          '<path d="M22 80 L32 55 H88 L98 80"/>' +
+          '<line x1="60" y1="55" x2="60" y2="80"/>' +
+          '<circle cx="25" cy="94" r="7"/>' +
+          '<circle cx="95" cy="94" r="7"/>' +
+          '</svg>',
+        "personal-loan":
+          '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<rect x="18" y="18" width="42" height="72" rx="5"/>' +
+          '<line x1="32" y1="28" x2="46" y2="28"/>' +
+          '<rect x="24" y="36" width="30" height="40"/>' +
+          '<line x1="34" y1="84" x2="44" y2="84"/>' +
+          '<rect x="62" y="62" width="48" height="30" rx="2"/>' +
+          '<line x1="62" y1="70" x2="110" y2="70"/>' +
+          '<rect x="68" y="76" width="10" height="6"/>' +
+          '<line x1="82" y1="80" x2="100" y2="80"/>' +
+          '</svg>'
+      };
+
+      var MODAL_TITLE_KEYS = {
+        "home-loan": "modal_title_home",
+        "car-loan": "modal_title_car",
+        "personal-loan": "modal_title_personal"
+      };
+
+      var PRODUCT_PAGES = {
+        "home-loan": "apply-home-loan.html",
+        "car-loan": "apply-car-loan.html",
+        "personal-loan": "apply-personal-loan.html"
+      };
+
+      var currentProduct = null;
+
+      function getDict() {
+        var lang = document.documentElement.lang || "en";
+        return (window.TRANSLATIONS && window.TRANSLATIONS[lang]) ||
+               (window.TRANSLATIONS && window.TRANSLATIONS.en) || {};
+      }
+
+      function openModal(product) {
+        currentProduct = product;
+        var modal = document.getElementById("loanModal");
+        var dict = getDict();
+
+        var title = document.getElementById("modalTitle");
+        var key = MODAL_TITLE_KEYS[product];
+        if (key) {
+          title.setAttribute("data-i18n", key);
+          title.textContent = dict[key] || "Tell us about your loan";
+        }
+
+        document.getElementById("modalSketch").innerHTML = SKETCHES[product] || "";
+
+        // Populate Purpose dropdown
+        var sel = document.getElementById("modalPurpose");
+        sel.innerHTML = "";
+        var placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.setAttribute("data-i18n", "modal_purpose_select");
+        placeholder.textContent = dict.modal_purpose_select || "Select purpose...";
+        sel.appendChild(placeholder);
+        (PURPOSES[product] || []).forEach(function (p) {
+          var opt = document.createElement("option");
+          opt.value = p.value;
+          opt.setAttribute("data-i18n", p.key);
+          opt.textContent = dict[p.key] || p.value;
+          sel.appendChild(opt);
+        });
+
+        // Reset financing mode
+        document.getElementById("modalMode").value = "";
+
+        modal.hidden = false;
+        document.body.classList.add("modal-open");
+        setTimeout(function () { sel.focus(); }, 80);
+      }
+
+      function closeModal() {
+        document.getElementById("loanModal").hidden = true;
+        document.body.classList.remove("modal-open");
+      }
+
+      function proceedFromModal() {
+        var purposeSel = document.getElementById("modalPurpose");
+        var modeSel    = document.getElementById("modalMode");
+        if (!purposeSel.value) { purposeSel.focus(); return; }
+        if (!modeSel.value)    { modeSel.focus();    return; }
+        if (!currentProduct) return;
+        var url = PRODUCT_PAGES[currentProduct] +
+          "?purpose=" + encodeURIComponent(purposeSel.value) +
+          "&mode="    + encodeURIComponent(modeSel.value);
+        window.location.href = url;
+      }
+
+      function init() {
+        document.querySelectorAll(".loan-card[data-product]").forEach(function (card) {
+          card.addEventListener("click", function (e) {
+            e.preventDefault();
+            openModal(card.dataset.product);
+          });
+        });
+        document.getElementById("modalClose").addEventListener("click", closeModal);
+        document.getElementById("modalProceed").addEventListener("click", proceedFromModal);
+        document.getElementById("loanModal").addEventListener("click", function (e) {
+          if (e.target.id === "loanModal") closeModal();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && !document.getElementById("loanModal").hidden) closeModal();
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
 </body>
 </html>

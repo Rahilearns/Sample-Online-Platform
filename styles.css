@@ -1094,6 +1094,147 @@ body.apply-page {
 
 /* Anchor offset so scrollIntoView lands the form question below the fixed ribbon */
 .form-question { scroll-margin-top: 70px; }
+.form-group { scroll-margin-top: 70px; }
+
+/* ============================================================
+   Required-field asterisk marker
+   ============================================================ */
+.field-label > span.req::after,
+.form-question-text.req::after {
+  content: " *";
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* ============================================================
+   Context chip on product pages (Purpose · Financing Mode from modal)
+   ============================================================ */
+.context-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--idlc-green-light);
+  border: 1px solid rgba(218,31,38,0.18);
+  color: var(--idlc-green-dark);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin: 8px 0 16px;
+}
+.context-chip:empty { display: none; }
+.context-chip svg { width: 14px; height: 14px; }
+
+/* ============================================================
+   Modal (pre-filter on apply-individual.html)
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 24px;
+  animation: modal-bg-in 0.2s ease both;
+}
+@keyframes modal-bg-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.modal-dialog {
+  background: white;
+  border-radius: 18px;
+  max-width: 460px;
+  width: 100%;
+  padding: 32px 32px 28px;
+  position: relative;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.32);
+  animation: modal-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.94) translateY(14px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.modal-close:hover {
+  background: var(--idlc-green-light);
+  color: var(--idlc-green-dark);
+}
+.modal-sketch {
+  width: 100%;
+  height: 130px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  color: var(--idlc-green-dark);
+}
+.modal-sketch svg {
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 6px 12px rgba(218, 31, 38, 0.10));
+}
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.modal-sub {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 22px;
+}
+.modal-field { margin-bottom: 14px; }
+.modal-field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.modal-field select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: white;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.modal-field select:focus {
+  outline: none;
+  border-color: var(--idlc-green);
+  box-shadow: 0 0 0 3px rgba(218, 31, 38, 0.12);
+}
+.modal-proceed { width: 100%; margin-top: 10px; }
+body.modal-open { overflow: hidden; }
 
 /* ---- Progress bar (top of loan application form) ---- */
 .form-progress {

@@ -2,6 +2,12 @@
   "use strict";
 
   var DEMO_OTP = "1234";
+  var EXISTING_NID = "5102284394";
+  var EXISTING_CLIENT = {
+    name: "Mahfuzul Islam",
+    cif: "553577",
+    email: "Imahfuzul@gmail.com"
+  };
 
   function $(id) { return document.getElementById(id); }
   function $$(sel) { return document.querySelectorAll(sel); }
@@ -27,22 +33,18 @@
   function calcEMI() {
     var aEl = $("calcAmount"), rEl = $("calcRate"), tEl = $("calcTenor");
     if (!aEl || !rEl || !tEl) return;
-
     var P = parseFloat(aEl.value);
     var annualRate = parseFloat(rEl.value);
     var years = parseFloat(tEl.value);
     var n = years * 12;
     var r = annualRate / 12 / 100;
-
     var emi;
     if (r === 0) emi = P / n;
     else emi = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
     var totalPayment = emi * n;
     var totalInterest = totalPayment - P;
-
     var dict = getDict();
     var yearWord = years === 1 ? (dict.calc_year || "year") : (dict.calc_years || "years");
-
     $("calcAmountVal").textContent = "৳ " + formatBDT(P);
     $("calcRateVal").textContent   = annualRate.toFixed(2) + "%";
     $("calcTenorVal").textContent  = years + " " + yearWord;
@@ -64,7 +66,7 @@
     }, 4500);
   }
 
-  // ============ Auto-comma formatter (BD-style: 25,00,000) ============
+  // ============ Auto-comma formatter ============
   function attachAutoComma(input) {
     function reformat() {
       var oldValue  = input.value;
@@ -89,9 +91,27 @@
     $$('#loanForm input[inputmode="numeric"]').forEach(attachAutoComma);
   }
 
+  // ============ Read purpose + mode from URL into hidden inputs + chip ============
+  function initContextFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var purpose = params.get("purpose");
+    var mode    = params.get("mode");
+    if (purpose) {
+      $$('input[name="purpose"]').forEach(function (el) { el.value = purpose; });
+    }
+    if (mode) {
+      $$('input[name="financingMode"]').forEach(function (el) { el.value = mode; });
+    }
+    var chip = $("contextChip");
+    if (chip && (purpose || mode)) {
+      var parts = [];
+      if (purpose) parts.push(purpose);
+      if (mode)    parts.push(mode);
+      chip.textContent = parts.join("  •  ");
+    }
+  }
+
   // ============ Progress bar ============
-  // Re-counts required fields whenever the form changes. CIF is only counted
-  // when the visitor selects "Yes" to "existing customer".
   function initProgressBar() {
     var form = $("loanForm");
     var fill = $("formProgressFill");
@@ -103,9 +123,10 @@
       form.querySelectorAll("[required]").forEach(function (el) {
         requiredNames.add(el.name);
       });
-      var existingChecked = form.querySelector('input[name="existing"]:checked');
-      var isExisting = existingChecked && existingChecked.value === "yes";
-      if (!isExisting) requiredNames.delete("cif");
+      // Monthly loan burden only counts when hasBurden = yes
+      var burdenChecked = form.querySelector('input[name="hasBurden"]:checked');
+      var hasBurden = burdenChecked && burdenChecked.value === "yes";
+      if (!hasBurden) requiredNames.delete("loanBurden");
 
       var filled = 0;
       requiredNames.forEach(function (name) {
@@ -134,7 +155,6 @@
   }
 
   // ============ Tracking number ============
-  // Format: IDLC-YYMMDD-XXXX (4 chars, ambiguous chars 0/O, 1/I excluded).
   function generateTrackingNumber() {
     var d = new Date();
     var yy = String(d.getFullYear()).slice(-2);
@@ -150,7 +170,7 @@
     return "IDLC-" + yy + mm + dd + "-" + rand;
   }
 
-  // ============ DOB picker bounds (18+ to 100 years old) ============
+  // ============ DOB bounds (18+ to 100) ============
   function initDobBounds() {
     var dob = document.querySelector('#otpForm input[name="dob"]');
     if (!dob) return;
@@ -169,11 +189,33 @@
     dob.setAttribute("min", fmt(min));
   }
 
+  // ============ Existing-client API simulation ============
+  // If NID matches EXISTING_NID, pre-fill name/cif/email in loanForm; otherwise
+  // copy name from the OTP gate (so the visitor doesn't re-type it).
+  function applyClientLookup(otpForm, loanForm) {
+    var nidInput  = otpForm.querySelector('input[name="nid"]');
+    var nameOtp   = otpForm.querySelector('input[name="name"]');
+    var nameLoan  = loanForm.querySelector('input[name="name"]');
+    var cifInput  = loanForm.querySelector('input[name="cif"]');
+    var emailInput= loanForm.querySelector('input[name="email"]');
+    if (!nidInput) return;
+    var nid = nidInput.value.trim();
+    if (nid === EXISTING_NID) {
+      if (nameLoan)   nameLoan.value   = EXISTING_CLIENT.name;
+      if (cifInput)   cifInput.value   = EXISTING_CLIENT.cif;
+      if (emailInput) emailInput.value = EXISTING_CLIENT.email;
+    } else {
+      // Carry over the name from OTP gate so the visitor doesn't retype it
+      if (nameOtp && nameLoan && !nameLoan.value) nameLoan.value = nameOtp.value;
+    }
+  }
+
   // ============ OTP gate & multi-stage form ============
   function initOtpFlow() {
     var otpForm = $("otpForm");
     if (!otpForm) return;
 
+    var nameInput  = otpForm.querySelector('input[name="name"]');
     var phoneInput = otpForm.querySelector('input[name="phone"]');
     var otpGroup   = otpForm.querySelector(".otp-group");
     var otpBoxes   = otpForm.querySelectorAll(".otp-boxes input");
@@ -208,6 +250,11 @@
       var dict = getDict();
 
       if (stage === "request") {
+        if (nameInput && !nameInput.value.trim()) {
+          nameInput.focus();
+          showToast("Please enter your name.", true);
+          return;
+        }
         var nidInput = otpForm.querySelector('input[name="nid"]');
         if (nidInput && !/^[0-9]{10,17}$/.test(nidInput.value.trim())) {
           nidInput.focus();
@@ -237,8 +284,9 @@
           showToast("Please enter a valid Bangladeshi mobile number (01XXXXXXXXX).", true);
           return;
         }
-        if (nidInput) nidInput.setAttribute("readonly", "");
-        if (dobInput) dobInput.setAttribute("readonly", "");
+        if (nameInput)  nameInput.setAttribute("readonly", "");
+        if (nidInput)   nidInput.setAttribute("readonly", "");
+        if (dobInput)   dobInput.setAttribute("readonly", "");
         phoneInput.setAttribute("readonly", "");
         otpGroup.hidden = false;
         otpError.hidden = true;
@@ -252,12 +300,19 @@
         if (entered === DEMO_OTP) {
           otpForm.hidden = true;
           if (loanForm) {
+            applyClientLookup(otpForm, loanForm);
             loanForm.hidden = false;
-            // Scroll so the "existing customer" question sits below the fixed
-            // ribbon (.form-question has scroll-margin-top: 70px in CSS).
-            var question = loanForm.querySelector(".form-question");
+            // re-format auto-comma fields after population
+            $$('#loanForm input[inputmode="numeric"]').forEach(function (el) {
+              if (el.value && /\d/.test(el.value)) {
+                el.dispatchEvent(new Event("input", { bubbles: true }));
+              }
+            });
+            // refresh progress bar
+            loanForm.dispatchEvent(new Event("input", { bubbles: true }));
+            var firstField = loanForm.querySelector(".form-group");
             setTimeout(function () {
-              if (question) question.scrollIntoView({ behavior: "smooth", block: "start" });
+              if (firstField) firstField.scrollIntoView({ behavior: "smooth", block: "start" });
               else loanForm.scrollIntoView({ behavior: "smooth", block: "start" });
             }, 80);
           }
@@ -273,19 +328,19 @@
     });
   }
 
-  // ============ Existing-customer toggle (show/hide CIF) ============
-  function initExistingToggle() {
-    var radios = $$('input[name="existing"]');
-    var cifGroup = $("cifGroup");
-    if (!radios.length || !cifGroup) return;
+  // ============ Loan-burden Y/N toggle (show/hide Monthly Loan Burden) ============
+  function initBurdenToggle() {
+    var radios = $$('input[name="hasBurden"]');
+    var burdenGroup = $("burdenGroup");
+    if (!radios.length || !burdenGroup) return;
     radios.forEach(function (radio) {
       radio.addEventListener("change", function () {
-        var showCif = radio.checked && radio.value === "yes";
-        cifGroup.hidden = !showCif;
-        var cifInput = cifGroup.querySelector("input");
-        if (cifInput) {
-          if (showCif) cifInput.setAttribute("required", "");
-          else cifInput.removeAttribute("required");
+        var show = radio.checked && radio.value === "yes";
+        burdenGroup.hidden = !show;
+        var inp = burdenGroup.querySelector("input");
+        if (inp) {
+          if (show) inp.setAttribute("required", "");
+          else { inp.removeAttribute("required"); inp.value = ""; }
         }
       });
     });
@@ -296,9 +351,7 @@
     var btns = $$(".info-btn");
     if (!btns.length) return;
     var currentTip = null;
-
     function hideTip() { if (currentTip) { currentTip.remove(); currentTip = null; } }
-
     function showTip(btn) {
       hideTip();
       var key = btn.getAttribute("data-info");
@@ -318,7 +371,6 @@
       tip.style.left = left + "px";
       currentTip = tip;
     }
-
     btns.forEach(function (btn) {
       btn.addEventListener("mouseenter", function () { showTip(btn); });
       btn.addEventListener("mouseleave", hideTip);
@@ -335,17 +387,19 @@
     window.addEventListener("resize", hideTip);
   }
 
-  // ============ Final submission: terms check, tracking number, success panel ============
+  // ============ Final submission: two declarations, tracking, success ============
   function initLoanForm() {
     var form = $("loanForm");
     if (!form) return;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var terms = form.querySelector('input[name="terms"]');
-      if (terms && !terms.checked) {
+      var dec1 = form.querySelector('input[name="declaration1"]');
+      var dec2 = form.querySelector('input[name="declaration2"]');
+      if ((dec1 && !dec1.checked) || (dec2 && !dec2.checked)) {
         var dict = getDict();
-        showToast(dict.form_terms_required || "Please accept the Terms & Conditions to continue.", true);
-        terms.focus();
+        showToast(dict.declarations_required || "Please accept both declarations to continue.", true);
+        if (dec1 && !dec1.checked) dec1.focus();
+        else if (dec2 && !dec2.checked) dec2.focus();
         return;
       }
       var success = $("formSuccess");
@@ -360,6 +414,7 @@
   }
 
   function init() {
+    initContextFromUrl();
     if ($("calcAmount")) {
       ["calcAmount", "calcRate", "calcTenor"].forEach(function (id) {
         $(id).addEventListener("input", calcEMI);
@@ -371,7 +426,7 @@
     }
     initDobBounds();
     initOtpFlow();
-    initExistingToggle();
+    initBurdenToggle();
     initInfoButtons();
     initAutoComma();
     initProgressBar();
