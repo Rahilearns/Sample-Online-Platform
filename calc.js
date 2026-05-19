@@ -64,6 +64,37 @@
     }, 4500);
   }
 
+  // ============ Auto-comma formatter (BD-style: 25,00,000) ============
+  // Reformats numeric inputs as the user types, preserving cursor position.
+  // Targets every <input inputmode="numeric"> in the loan form, but NOT the
+  // single-digit OTP boxes (they live in #otpForm, not #loanForm).
+  function attachAutoComma(input) {
+    function reformat() {
+      var oldValue  = input.value;
+      var oldCursor = input.selectionStart || oldValue.length;
+      var digitsBeforeCursor = oldValue.slice(0, oldCursor).replace(/\D/g, "").length;
+      var raw = oldValue.replace(/\D/g, "");
+      var formatted = raw === "" ? "" : formatBDT(parseInt(raw, 10));
+      if (formatted === oldValue) return;
+      input.value = formatted;
+      // Restore cursor: walk formatted until we've passed the same number of digits
+      var newCursor = 0, seen = 0;
+      while (newCursor < formatted.length && seen < digitsBeforeCursor) {
+        if (/\d/.test(formatted.charAt(newCursor))) seen++;
+        newCursor++;
+      }
+      try { input.setSelectionRange(newCursor, newCursor); } catch (e) {}
+    }
+    input.addEventListener("input", reformat);
+    // Format any pre-filled value (e.g. value="0" on existingLoan)
+    if (input.value && /\d/.test(input.value)) reformat();
+  }
+
+  function initAutoComma() {
+    // All numeric inputs inside #loanForm
+    $$('#loanForm input[inputmode="numeric"]').forEach(attachAutoComma);
+  }
+
   // ============ OTP gate & multi-stage form ============
   function initOtpFlow() {
     var otpForm = $("otpForm");
@@ -249,6 +280,7 @@
     initOtpFlow();
     initExistingToggle();
     initInfoButtons();
+    initAutoComma();
     initLoanForm();
   }
 
