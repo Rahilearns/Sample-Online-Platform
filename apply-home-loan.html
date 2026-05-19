@@ -153,6 +153,14 @@
 
             <div class="form-group">
               <div class="field-label">
+                <span data-i18n="field_nid">NID / Birth Certificate Number</span>
+                <button type="button" class="info-btn" data-info="info_nid" aria-label="More info">i</button>
+              </div>
+              <input type="text" name="nid" inputmode="numeric" pattern="[0-9]{10,17}" required />
+            </div>
+
+            <div class="form-group">
+              <div class="field-label">
                 <span data-i18n="field_phone">Phone Number</span>
                 <button type="button" class="info-btn" data-info="info_phone" aria-label="More info">i</button>
               </div>
@@ -177,6 +185,13 @@
           <!-- Stage 3: Full loan-application form (revealed after OTP) -->
           <form id="loanForm" class="loan-form" hidden novalidate>
             <input type="hidden" name="product" value="home-loan" />
+
+            <div class="form-progress" aria-hidden="true">
+              <div class="form-progress-track">
+                <div class="form-progress-fill" id="formProgressFill" style="width: 0%"></div>
+              </div>
+              <span class="form-progress-text" id="formProgressText">0%</span>
+            </div>
 
             <div class="form-question">
               <span class="form-question-text" data-i18n="field_existing_customer">Are you an existing customer of IDLC?</span>

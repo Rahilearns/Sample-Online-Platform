@@ -65,9 +65,6 @@
   }
 
   // ============ Auto-comma formatter (BD-style: 25,00,000) ============
-  // Reformats numeric inputs as the user types, preserving cursor position.
-  // Targets every <input inputmode="numeric"> in the loan form, but NOT the
-  // single-digit OTP boxes (they live in #otpForm, not #loanForm).
   function attachAutoComma(input) {
     function reformat() {
       var oldValue  = input.value;
@@ -77,7 +74,6 @@
       var formatted = raw === "" ? "" : formatBDT(parseInt(raw, 10));
       if (formatted === oldValue) return;
       input.value = formatted;
-      // Restore cursor: walk formatted until we've passed the same number of digits
       var newCursor = 0, seen = 0;
       while (newCursor < formatted.length && seen < digitsBeforeCursor) {
         if (/\d/.test(formatted.charAt(newCursor))) seen++;
@@ -86,13 +82,72 @@
       try { input.setSelectionRange(newCursor, newCursor); } catch (e) {}
     }
     input.addEventListener("input", reformat);
-    // Format any pre-filled value (e.g. value="0" on existingLoan)
     if (input.value && /\d/.test(input.value)) reformat();
   }
 
   function initAutoComma() {
-    // All numeric inputs inside #loanForm
     $$('#loanForm input[inputmode="numeric"]').forEach(attachAutoComma);
+  }
+
+  // ============ Progress bar ============
+  // Re-counts required fields whenever the form changes. CIF is only counted
+  // when the visitor selects "Yes" to "existing customer".
+  function initProgressBar() {
+    var form = $("loanForm");
+    var fill = $("formProgressFill");
+    var text = $("formProgressText");
+    if (!form || !fill || !text) return;
+
+    function update() {
+      var requiredNames = new Set();
+      form.querySelectorAll("[required]").forEach(function (el) {
+        requiredNames.add(el.name);
+      });
+      var existingChecked = form.querySelector('input[name="existing"]:checked');
+      var isExisting = existingChecked && existingChecked.value === "yes";
+      if (!isExisting) requiredNames.delete("cif");
+
+      var filled = 0;
+      requiredNames.forEach(function (name) {
+        var els = form.querySelectorAll('[name="' + name + '"]');
+        if (!els.length) return;
+        var first = els[0];
+        var has = false;
+        if (first.type === "radio") {
+          has = form.querySelector('input[name="' + name + '"]:checked') !== null;
+        } else if (first.type === "checkbox") {
+          has = first.checked;
+        } else {
+          has = first.value.trim() !== "";
+        }
+        if (has) filled++;
+      });
+
+      var pct = requiredNames.size ? Math.round(filled / requiredNames.size * 100) : 0;
+      fill.style.width = pct + "%";
+      text.textContent = pct + "%";
+    }
+
+    form.addEventListener("input", update);
+    form.addEventListener("change", update);
+    update();
+  }
+
+  // ============ Tracking number ============
+  // Format: IDLC-YYMMDD-XXXX (4 chars, ambiguous chars 0/O, 1/I excluded).
+  function generateTrackingNumber() {
+    var d = new Date();
+    var yy = String(d.getFullYear()).slice(-2);
+    var mm = String(d.getMonth() + 1);
+    if (mm.length < 2) mm = "0" + mm;
+    var dd = String(d.getDate());
+    if (dd.length < 2) dd = "0" + dd;
+    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    var rand = "";
+    for (var i = 0; i < 4; i++) {
+      rand += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return "IDLC-" + yy + mm + dd + "-" + rand;
   }
 
   // ============ OTP gate & multi-stage form ============
@@ -107,24 +162,17 @@
     var otpError   = otpForm.querySelector(".otp-error");
     var otpBtn     = $("otpBtn");
     var loanForm   = $("loanForm");
-    var stage      = "request"; // 'request' or 'verify'
+    var stage      = "request";
 
-    // Auto-advance + backspace navigation on OTP boxes
     otpBoxes.forEach(function (box, idx) {
       box.addEventListener("input", function () {
-        // Strip non-digits
         box.value = box.value.replace(/\D/g, "").slice(0, 1);
         box.classList.toggle("filled", !!box.value);
-        if (box.value && idx < otpBoxes.length - 1) {
-          otpBoxes[idx + 1].focus();
-        }
+        if (box.value && idx < otpBoxes.length - 1) otpBoxes[idx + 1].focus();
       });
       box.addEventListener("keydown", function (e) {
-        if (e.key === "Backspace" && !box.value && idx > 0) {
-          otpBoxes[idx - 1].focus();
-        }
+        if (e.key === "Backspace" && !box.value && idx > 0) otpBoxes[idx - 1].focus();
       });
-      // Paste handling: paste full 4-digit code
       box.addEventListener("paste", function (e) {
         e.preventDefault();
         var pasted = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "").slice(0, 4);
@@ -147,12 +195,19 @@
           showToast("Please enter your name.", true);
           return;
         }
+        var nidInput = otpForm.querySelector('input[name="nid"]');
+        if (nidInput && !/^[0-9]{10,17}$/.test(nidInput.value.trim())) {
+          nidInput.focus();
+          showToast("Please enter a valid NID / Birth Certificate number (10, 13, or 17 digits).", true);
+          return;
+        }
         if (!/^01[0-9]{9}$/.test(phoneInput.value)) {
           phoneInput.focus();
           showToast("Please enter a valid Bangladeshi mobile number (01XXXXXXXXX).", true);
           return;
         }
         nameInput.setAttribute("readonly", "");
+        if (nidInput) nidInput.setAttribute("readonly", "");
         phoneInput.setAttribute("readonly", "");
         otpGroup.hidden = false;
         otpError.hidden = true;
@@ -167,8 +222,13 @@
           otpForm.hidden = true;
           if (loanForm) {
             loanForm.hidden = false;
-            // smooth scroll the new form into view on small screens
-            loanForm.scrollIntoView({ behavior: "smooth", block: "start" });
+            // Scroll so the "existing customer" question sits below the fixed
+            // ribbon (.form-question has scroll-margin-top: 70px in CSS).
+            var question = loanForm.querySelector(".form-question");
+            setTimeout(function () {
+              if (question) question.scrollIntoView({ behavior: "smooth", block: "start" });
+              else loanForm.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 80);
           }
         } else {
           otpError.hidden = false;
@@ -204,12 +264,9 @@
   function initInfoButtons() {
     var btns = $$(".info-btn");
     if (!btns.length) return;
-
     var currentTip = null;
 
-    function hideTip() {
-      if (currentTip) { currentTip.remove(); currentTip = null; }
-    }
+    function hideTip() { if (currentTip) { currentTip.remove(); currentTip = null; } }
 
     function showTip(btn) {
       hideTip();
@@ -242,20 +299,27 @@
         else showTip(btn);
       });
     });
-
     document.addEventListener("click", hideTip);
     document.addEventListener("scroll", hideTip, true);
     window.addEventListener("resize", hideTip);
   }
 
-  // ============ Final form submission ============
-  // Hide the loan form and reveal the green confirmation panel.
+  // ============ Final submission: terms check, tracking number, success panel ============
   function initLoanForm() {
     var form = $("loanForm");
     if (!form) return;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      var terms = form.querySelector('input[name="terms"]');
+      if (terms && !terms.checked) {
+        var dict = getDict();
+        showToast(dict.form_terms_required || "Please accept the Terms & Conditions to continue.", true);
+        terms.focus();
+        return;
+      }
       var success = $("formSuccess");
+      var trackEl = $("trackingNumber");
+      if (trackEl) trackEl.textContent = generateTrackingNumber();
       form.hidden = true;
       if (success) {
         success.hidden = false;
@@ -270,7 +334,6 @@
         $(id).addEventListener("input", calcEMI);
       });
       calcEMI();
-      // Re-run on language switch (year/years word)
       $$(".lang-btn").forEach(function (btn) {
         btn.addEventListener("click", function () { setTimeout(calcEMI, 60); });
       });
@@ -279,6 +342,7 @@
     initExistingToggle();
     initInfoButtons();
     initAutoComma();
+    initProgressBar();
     initLoanForm();
   }
 

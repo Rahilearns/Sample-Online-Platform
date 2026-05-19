@@ -60,6 +60,7 @@ window.TRANSLATIONS = {
 
     // OTP flow
     field_name: "Name",
+    field_nid: "NID / Birth Certificate Number",
     field_phone: "Phone Number",
     request_otp: "Request OTP",
     submit_otp: "Submit OTP",
@@ -84,6 +85,7 @@ window.TRANSLATIONS = {
 
     // Info tooltips
     info_name: "Your full name as it appears on your NID.",
+    info_nid: "Your 10, 13 or 17-digit National ID number, or 17-digit Birth Certificate number.",
     info_phone: "Active mobile number where we'll send the OTP.",
     info_cif: "Your IDLC Customer ID — found on your IDLC account statement or available from your branch.",
     info_branch: "The IDLC branch nearest your address — your application will be routed there.",
@@ -99,6 +101,11 @@ window.TRANSLATIONS = {
     // Success message
     form_success_title: "Application Received",
     form_success_msg: "Your application has been received. An IDLC representative will contact you within 8 working hours.",
+    terms_label_html: "I have read and accept the <a href=\"#\" class=\"terms-link\">Terms &amp; Conditions</a>.",
+    form_terms_required: "Please accept the Terms & Conditions to continue.",
+    tracking_label: "Your tracking number",
+    tracking_hint: "Save this number to check your application status online.",
+    submit_another: "Submit Another Application",
 
     // ===== Home: Nav =====
     nav_about: "About Us",
@@ -279,6 +286,7 @@ window.TRANSLATIONS = {
 
     // OTP flow
     field_name: "নাম",
+    field_nid: "এনআইডি / জন্ম নিবন্ধন নম্বর",
     field_phone: "ফোন নম্বর",
     request_otp: "ওটিপি অনুরোধ করুন",
     submit_otp: "ওটিপি জমা দিন",
@@ -303,6 +311,7 @@ window.TRANSLATIONS = {
 
     // Info tooltips
     info_name: "এনআইডি অনুযায়ী আপনার পূর্ণ নাম।",
+    info_nid: "আপনার ১০, ১৩ বা ১৭-ডিজিটের জাতীয় পরিচয়পত্র বা ১৭-ডিজিটের জন্ম নিবন্ধন নম্বর।",
     info_phone: "যে সচল মোবাইল নম্বরে আমরা ওটিপি পাঠাব।",
     info_cif: "আপনার আইডিএলসি গ্রাহক নম্বর — অ্যাকাউন্ট স্টেটমেন্ট বা শাখা থেকে নিন।",
     info_branch: "আপনার ঠিকানার সবচেয়ে কাছের আইডিএলসি শাখা।",
@@ -318,6 +327,11 @@ window.TRANSLATIONS = {
     // Success message
     form_success_title: "আবেদন গৃহীত হয়েছে",
     form_success_msg: "আপনার আবেদন গৃহীত হয়েছে। ৮ কর্মঘণ্টার মধ্যে আইডিএলসি-র একজন প্রতিনিধি আপনার সাথে যোগাযোগ করবেন।",
+    terms_label_html: "আমি <a href=\"#\" class=\"terms-link\">শর্তাবলি</a> পড়েছি এবং সম্মত হয়েছি।",
+    form_terms_required: "এগিয়ে যেতে অনুগ্রহ করে শর্তাবলি গ্রহণ করুন।",
+    tracking_label: "আপনার ট্র্যাকিং নম্বর",
+    tracking_hint: "অনলাইনে আবেদনের অগ্রগতি দেখতে এই নম্বরটি সংরক্ষণ করুন।",
+    submit_another: "আরেকটি আবেদন করুন",
 
     // ===== Home: Nav =====
     nav_about: "আমাদের সম্পর্কে",
