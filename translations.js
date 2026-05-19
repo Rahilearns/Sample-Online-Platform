@@ -60,7 +60,7 @@ window.TRANSLATIONS = {
 
     // OTP flow
     field_name: "Name",
-    field_nid: "NID / Birth Certificate Number",
+    field_nid: "NID",
     field_phone: "Phone Number",
     request_otp: "Request OTP",
     submit_otp: "Submit OTP",
@@ -286,7 +286,7 @@ window.TRANSLATIONS = {
 
     // OTP flow
     field_name: "নাম",
-    field_nid: "এনআইডি / জন্ম নিবন্ধন নম্বর",
+    field_nid: "এনআইডি",
     field_phone: "ফোন নম্বর",
     request_otp: "ওটিপি অনুরোধ করুন",
     submit_otp: "ওটিপি জমা দিন",

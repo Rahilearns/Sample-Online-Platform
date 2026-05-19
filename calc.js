@@ -192,7 +192,7 @@
         var nidInput = otpForm.querySelector('input[name="nid"]');
         if (nidInput && !/^[0-9]{10,17}$/.test(nidInput.value.trim())) {
           nidInput.focus();
-          showToast("Please enter a valid NID / Birth Certificate number (10, 13, or 17 digits).", true);
+          showToast("Please enter a valid NID number (10, 13, or 17 digits).", true);
           return;
         }
         if (!/^01[0-9]{9}$/.test(phoneInput.value)) {
