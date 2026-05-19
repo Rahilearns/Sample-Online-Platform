@@ -249,20 +249,18 @@
   }
 
   // ============ Final form submission ============
+  // Hide the loan form and reveal the green confirmation panel.
   function initLoanForm() {
     var form = $("loanForm");
     if (!form) return;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var dict = getDict();
-      var msg = dict.form_thanks ||
-        "Thank you! Your application has been received. Our team will contact you within 24 hours.";
-      showToast(msg);
-      form.reset();
-      // Reset existing-customer toggle UI
-      var cifGroup = $("cifGroup");
-      if (cifGroup) cifGroup.hidden = true;
-      form.scrollIntoView({ behavior: "smooth", block: "start" });
+      var success = $("formSuccess");
+      form.hidden = true;
+      if (success) {
+        success.hidden = false;
+        success.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     });
   }
 

@@ -1054,6 +1054,44 @@ body.apply-page {
   line-height: 1.6;
 }
 
+/* ---- Form success message (shown after Submit Application) ---- */
+.form-success {
+  background: linear-gradient(160deg, #ecfdf3 0%, #d1fadf 100%);
+  border: 1px solid #6ee7b7;
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  text-align: center;
+  animation: form-success-in 0.35s ease both;
+}
+@keyframes form-success-in {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.form-success-icon {
+  color: #059669;
+  margin: 0 auto 16px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(52, 211, 153, 0.22);
+  display: grid;
+  place-items: center;
+}
+.form-success-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.form-success-msg {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #047857;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
 /* ---- Toast (submit confirmation) ---- */
 .form-toast {
   position: fixed;

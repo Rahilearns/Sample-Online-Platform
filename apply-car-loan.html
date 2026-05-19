@@ -271,6 +271,18 @@
 
             <button type="submit" class="btn-submit" data-i18n="form_submit">Submit Application</button>
           </form>
+
+          <!-- Success panel (revealed after Submit Application) -->
+          <div class="form-success" id="formSuccess" hidden role="status" aria-live="polite">
+            <div class="form-success-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 12l3 3 5-6"/>
+              </svg>
+            </div>
+            <h3 class="form-success-title" data-i18n="form_success_title">Application Received</h3>
+            <p class="form-success-msg" data-i18n="form_success_msg">Your application has been received. An IDLC representative will contact you within 8 working hours.</p>
+          </div>
         </section>
 
         <aside class="calc-widget">

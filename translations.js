@@ -96,6 +96,10 @@ window.TRANSLATIONS = {
     info_amount: "The amount you wish to borrow from IDLC.",
     info_tenor: "Number of years over which you'll repay the loan.",
 
+    // Success message
+    form_success_title: "Application Received",
+    form_success_msg: "Your application has been received. An IDLC representative will contact you within 8 working hours.",
+
     // ===== Home: Nav =====
     nav_about: "About Us",
     nav_how: "How it Works",
@@ -310,6 +314,10 @@ window.TRANSLATIONS = {
     info_loan_burden: "চলমান ঋণের জন্য মাসে মোট ইএমআই।",
     info_amount: "আপনি কত টাকা ঋণ নিতে চান।",
     info_tenor: "কত বছরে ঋণ পরিশোধ করবেন।",
+
+    // Success message
+    form_success_title: "আবেদন গৃহীত হয়েছে",
+    form_success_msg: "আপনার আবেদন গৃহীত হয়েছে। ৮ কর্মঘণ্টার মধ্যে আইডিএলসি-র একজন প্রতিনিধি আপনার সাথে যোগাযোগ করবেন।",
 
     // ===== Home: Nav =====
     nav_about: "আমাদের সম্পর্কে",
