@@ -58,6 +58,44 @@ window.TRANSLATIONS = {
     placeholder_disclaimer: "Sample content for prototype — replace with IDLC's actual specifications.",
     demo_disclaimer: "Educational prototype only — not affiliated with IDLC Finance PLC.",
 
+    // OTP flow
+    field_name: "Name",
+    field_phone: "Phone Number",
+    request_otp: "Request OTP",
+    submit_otp: "Submit OTP",
+    otp_label: "Enter the 4-digit OTP sent to your phone",
+    otp_demo: "Demo OTP:",
+    otp_error: "Incorrect OTP. Please try again.",
+
+    // Full application form
+    field_existing_customer: "Are you an existing customer of IDLC?",
+    yes: "Yes",
+    no: "No",
+    field_cif: "Customer No. (CIF)",
+    field_branch: "Nearest IDLC Branch",
+    field_email_app: "Email",
+    field_profession_app: "Profession",
+    field_experience: "Total Professional Experience (years)",
+    field_income_app: "Total Monthly Income (BDT)",
+    field_existing_loan: "Existing Loan Amount (BDT)",
+    field_loan_burden: "Total Monthly Loan Burden (BDT)",
+    field_expected_amount: "Expected Loan Amount (BDT)",
+    field_tenor_app: "Tenor (years)",
+
+    // Info tooltips
+    info_name: "Your full name as it appears on your NID.",
+    info_phone: "Active mobile number where we'll send the OTP.",
+    info_cif: "Your IDLC Customer ID — found on your IDLC account statement or available from your branch.",
+    info_branch: "The IDLC branch nearest your address — your application will be routed there.",
+    info_email: "We'll send status updates and the loan agreement to this address.",
+    info_profession: "Your primary source of income.",
+    info_experience: "Years of work or business experience in your current field.",
+    info_income: "Your average gross monthly income from all sources (before tax).",
+    info_existing_loan: "Total outstanding principal across all your current loans.",
+    info_loan_burden: "Total monthly EMI you already pay for existing loans.",
+    info_amount: "The amount you wish to borrow from IDLC.",
+    info_tenor: "Number of years over which you'll repay the loan.",
+
     // ===== Home: Nav =====
     nav_about: "About Us",
     nav_how: "How it Works",
@@ -234,6 +272,44 @@ window.TRANSLATIONS = {
     section_faqs: "সাধারণ প্রশ্ন",
     placeholder_disclaimer: "প্রোটোটাইপের জন্য নমুনা কন্টেন্ট — আইডিএলসি-র প্রকৃত স্পেসিফিকেশন দিয়ে প্রতিস্থাপন করুন।",
     demo_disclaimer: "শিক্ষামূলক প্রোটোটাইপ — আইডিএলসি ফাইন্যান্স পিএলসি-এর সাথে সম্পর্কিত নয়।",
+
+    // OTP flow
+    field_name: "নাম",
+    field_phone: "ফোন নম্বর",
+    request_otp: "ওটিপি অনুরোধ করুন",
+    submit_otp: "ওটিপি জমা দিন",
+    otp_label: "আপনার ফোনে পাঠানো ৪ ডিজিটের ওটিপি লিখুন",
+    otp_demo: "ডেমো ওটিপি:",
+    otp_error: "ভুল ওটিপি। আবার চেষ্টা করুন।",
+
+    // Full application form
+    field_existing_customer: "আপনি কি আইডিএলসি-র বিদ্যমান গ্রাহক?",
+    yes: "হ্যাঁ",
+    no: "না",
+    field_cif: "গ্রাহক নং (সিআইএফ)",
+    field_branch: "নিকটতম আইডিএলসি শাখা",
+    field_email_app: "ইমেইল",
+    field_profession_app: "পেশা",
+    field_experience: "মোট পেশাগত অভিজ্ঞতা (বছর)",
+    field_income_app: "মোট মাসিক আয় (টাকা)",
+    field_existing_loan: "বিদ্যমান ঋণের পরিমাণ (টাকা)",
+    field_loan_burden: "মোট মাসিক ঋণের চাপ (টাকা)",
+    field_expected_amount: "প্রত্যাশিত ঋণের পরিমাণ (টাকা)",
+    field_tenor_app: "মেয়াদ (বছর)",
+
+    // Info tooltips
+    info_name: "এনআইডি অনুযায়ী আপনার পূর্ণ নাম।",
+    info_phone: "যে সচল মোবাইল নম্বরে আমরা ওটিপি পাঠাব।",
+    info_cif: "আপনার আইডিএলসি গ্রাহক নম্বর — অ্যাকাউন্ট স্টেটমেন্ট বা শাখা থেকে নিন।",
+    info_branch: "আপনার ঠিকানার সবচেয়ে কাছের আইডিএলসি শাখা।",
+    info_email: "এই ইমেইলে স্ট্যাটাস আপডেট ও চুক্তিপত্র পাঠানো হবে।",
+    info_profession: "আপনার মূল আয়ের উৎস।",
+    info_experience: "বর্তমান পেশায় কাজ বা ব্যবসার মোট বছর।",
+    info_income: "সব উৎস মিলিয়ে কর-পূর্ব গড় মাসিক আয়।",
+    info_existing_loan: "চলমান সব ঋণের বকেয়া মূল।",
+    info_loan_burden: "চলমান ঋণের জন্য মাসে মোট ইএমআই।",
+    info_amount: "আপনি কত টাকা ঋণ নিতে চান।",
+    info_tenor: "কত বছরে ঋণ পরিশোধ করবেন।",
 
     // ===== Home: Nav =====
     nav_about: "আমাদের সম্পর্কে",

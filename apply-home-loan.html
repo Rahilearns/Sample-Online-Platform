@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body class="apply-page product-page">
 
@@ -32,42 +32,189 @@
     <span class="apply-eyebrow" data-i18n="prod_home_loan">Home Loan</span>
     <h1 class="apply-title" data-i18n="prod_apply_home">Apply for a Home Loan</h1>
 
-    <div class="product-hero-grid">
+    <div class="product-layout">
 
-      <section class="loan-form-card">
-        <h2 data-i18n="form_application">Application Form</h2>
-        <form id="loanForm" class="loan-form" novalidate>
-          <input type="hidden" name="product" value="home-loan" />
+      <!-- ===== Left column: policies & disclosures ===== -->
+      <div class="product-info-col">
 
-          <div class="form-row">
+        <section class="info-section">
+          <h2 data-i18n="section_purpose">Purpose</h2>
+          <p>A Home Loan can be used for the following purposes:</p>
+          <ul>
+            <li>Purchase of a new apartment or independent house</li>
+            <li>Construction on owned residential land</li>
+            <li>Renovation, extension or interior finishing of an existing home</li>
+            <li>Take-over (refinancing) of an existing home loan from another bank or NBFI</li>
+            <li>Purchase of residential land for self-construction (with construction plan)</li>
+          </ul>
+          <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
+        </section>
+
+        <section class="info-section">
+          <h2 data-i18n="section_eligibility">Eligibility</h2>
+          <ul>
+            <li>Bangladeshi national</li>
+            <li>Age: 21–65 years (at loan maturity)</li>
+            <li>Minimum monthly income: BDT 40,000 (salaried) or equivalent verifiable business income</li>
+            <li>Minimum 2 years of employment or business continuity</li>
+            <li>Acceptable credit history per Credit Information Bureau (CIB) report</li>
+          </ul>
+          <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
+        </section>
+
+        <section class="info-section">
+          <h2 data-i18n="section_policy">Policy Highlights</h2>
+          <ul>
+            <li>Maximum loan amount: up to BDT 5 crore, capped at 70% of property market value</li>
+            <li>Tenor: 1–25 years</li>
+            <li>Interest rate: 9.50% – 12.00% per annum (floating, subject to product policy)</li>
+            <li>Processing fee: 1.0% of approved loan amount (one-time)</li>
+            <li>Partial / full prepayment allowed after 12 months with 0.5% fee on the prepaid balance</li>
+            <li>Property mortgage and a personal guarantor are required</li>
+          </ul>
+          <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
+        </section>
+
+        <section class="info-section">
+          <h2 data-i18n="section_documents">Required Documents</h2>
+          <ul>
+            <li>NID copy (both sides) of applicant and co-applicant</li>
+            <li>Latest 6 months' bank statement (primary account)</li>
+            <li>Salary certificate, pay slip and form-V (for salaried applicants)</li>
+            <li>Trade license and 12 months' business account statement (for business owners)</li>
+            <li>e-TIN certificate and most recent tax return acknowledgment</li>
+            <li>2 passport-size photos</li>
+            <li>Property documents: title deed, mutation, rent receipt, RAJUK/CDA approval</li>
+            <li>Approved building plan (for construction or renovation)</li>
+          </ul>
+        </section>
+
+        <section class="info-section">
+          <h2 data-i18n="section_terms">Terms &amp; Conditions</h2>
+          <ol>
+            <li>Loan disbursement is subject to credit approval, verification and successful property valuation.</li>
+            <li>Interest rates are floating and may be revised in line with Bangladesh Bank guidelines.</li>
+            <li>Late payment incurs a penalty as per the policy in effect at the time of default.</li>
+            <li>Property mortgage in favour of IDLC Finance PLC is required before disbursement.</li>
+            <li>Applicant must maintain a primary banking relationship for EMI auto-debit.</li>
+            <li>All disputes are subject to the jurisdiction of the courts of Bangladesh.</li>
+          </ol>
+          <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
+        </section>
+
+        <section class="info-section">
+          <h2 data-i18n="section_faqs">Frequently Asked Questions</h2>
+
+          <details class="faq-item">
+            <summary>What is the maximum Home Loan amount I can get?</summary>
+            <p>Up to BDT 5 crore, subject to your repayment capacity and capped at 70% of the property's market value (the lower of the two applies).</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>How long does approval take?</summary>
+            <p>Typically 7–14 business days after submission of complete documentation and property valuation.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Can I prepay my loan early?</summary>
+            <p>Yes. Partial or full prepayment is allowed after 12 months from disbursement, at a fee of 0.5% on the prepaid balance.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Is a guarantor required?</summary>
+            <p>One personal guarantor is generally required, depending on the loan amount and applicant profile.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Are joint applications allowed?</summary>
+            <p>Yes — spouse, parents or siblings may apply jointly. Combined income improves eligibility.</p>
+          </details>
+        </section>
+
+      </div>
+
+      <!-- ===== Right column: form + calculator ===== -->
+      <aside class="product-action-col">
+
+        <section class="loan-form-card">
+          <h2 data-i18n="form_application">Application Form</h2>
+
+          <!-- Stage 1 & 2: Name + Phone + OTP gate -->
+          <form id="otpForm" class="loan-form" novalidate>
+            <input type="hidden" name="product" value="home-loan" />
+
             <div class="form-group">
-              <label data-i18n="form_full_name">Full Name</label>
+              <div class="field-label">
+                <span data-i18n="field_name">Name</span>
+                <button type="button" class="info-btn" data-info="info_name" aria-label="More info">i</button>
+              </div>
               <input type="text" name="name" autocomplete="name" required />
             </div>
-            <div class="form-group">
-              <label data-i18n="form_mobile">Mobile Number</label>
-              <input type="tel" name="mobile" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" required />
-            </div>
-          </div>
 
-          <div class="form-row">
             <div class="form-group">
-              <label data-i18n="form_email">Email</label>
+              <div class="field-label">
+                <span data-i18n="field_phone">Phone Number</span>
+                <button type="button" class="info-btn" data-info="info_phone" aria-label="More info">i</button>
+              </div>
+              <input type="tel" name="phone" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" required />
+            </div>
+
+            <div class="otp-group" hidden>
+              <label class="otp-label" data-i18n="otp_label">Enter the 4-digit OTP sent to your phone</label>
+              <div class="otp-boxes">
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="one-time-code" aria-label="OTP digit 1" />
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="OTP digit 2" />
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="OTP digit 3" />
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" aria-label="OTP digit 4" />
+              </div>
+              <p class="otp-hint"><span data-i18n="otp_demo">Demo OTP:</span> <code>1234</code></p>
+              <p class="otp-error" hidden data-i18n="otp_error">Incorrect OTP. Please try again.</p>
+            </div>
+
+            <button type="submit" class="btn-submit" id="otpBtn" data-i18n="request_otp">Request OTP</button>
+          </form>
+
+          <!-- Stage 3: Full loan-application form (revealed after OTP) -->
+          <form id="loanForm" class="loan-form" hidden novalidate>
+            <input type="hidden" name="product" value="home-loan" />
+
+            <div class="form-question">
+              <span class="form-question-text" data-i18n="field_existing_customer">Are you an existing customer of IDLC?</span>
+              <div class="form-radio-group">
+                <label><input type="radio" name="existing" value="yes" required /> <span data-i18n="yes">Yes</span></label>
+                <label><input type="radio" name="existing" value="no" required /> <span data-i18n="no">No</span></label>
+              </div>
+            </div>
+
+            <div class="form-group" id="cifGroup" hidden>
+              <div class="field-label">
+                <span data-i18n="field_cif">Customer No. (CIF)</span>
+                <button type="button" class="info-btn" data-info="info_cif" aria-label="More info">i</button>
+              </div>
+              <input type="text" name="cif" />
+            </div>
+
+            <div class="form-group">
+              <div class="field-label">
+                <span data-i18n="field_branch">Nearest IDLC Branch</span>
+                <button type="button" class="info-btn" data-info="info_branch" aria-label="More info">i</button>
+              </div>
+              <input type="text" name="branch" required />
+            </div>
+
+            <div class="form-group">
+              <div class="field-label">
+                <span data-i18n="field_email_app">Email</span>
+                <button type="button" class="info-btn" data-info="info_email" aria-label="More info">i</button>
+              </div>
               <input type="email" name="email" autocomplete="email" required />
             </div>
-            <div class="form-group">
-              <label data-i18n="form_nid">NID / Birth Certificate Number</label>
-              <input type="text" name="nid" required />
-            </div>
-          </div>
 
-          <div class="form-row">
             <div class="form-group">
-              <label data-i18n="form_dob">Date of Birth</label>
-              <input type="date" name="dob" required />
-            </div>
-            <div class="form-group">
-              <label data-i18n="form_profession">Profession</label>
+              <div class="field-label">
+                <span data-i18n="field_profession_app">Profession</span>
+                <button type="button" class="info-btn" data-info="info_profession" aria-label="More info">i</button>
+              </div>
               <select name="profession" required>
                 <option value="" data-i18n="form_profession_select">Select...</option>
                 <option value="salaried" data-i18n="form_profession_salaried">Salaried</option>
@@ -76,163 +223,96 @@
                 <option value="other"    data-i18n="form_profession_other">Other</option>
               </select>
             </div>
-          </div>
 
-          <div class="form-row">
             <div class="form-group">
-              <label data-i18n="form_income">Monthly Income (BDT)</label>
+              <div class="field-label">
+                <span data-i18n="field_experience">Total Professional Experience (years)</span>
+                <button type="button" class="info-btn" data-info="info_experience" aria-label="More info">i</button>
+              </div>
+              <input type="number" name="experience" min="0" max="60" required />
+            </div>
+
+            <div class="form-group">
+              <div class="field-label">
+                <span data-i18n="field_income_app">Total Monthly Income (BDT)</span>
+                <button type="button" class="info-btn" data-info="info_income" aria-label="More info">i</button>
+              </div>
               <input type="number" name="income" min="0" inputmode="numeric" required />
             </div>
+
             <div class="form-group">
-              <label data-i18n="form_amount">Loan Amount (BDT)</label>
+              <div class="field-label">
+                <span data-i18n="field_existing_loan">Existing Loan Amount (BDT)</span>
+                <button type="button" class="info-btn" data-info="info_existing_loan" aria-label="More info">i</button>
+              </div>
+              <input type="number" name="existingLoan" min="0" inputmode="numeric" value="0" />
+            </div>
+
+            <div class="form-group">
+              <div class="field-label">
+                <span data-i18n="field_loan_burden">Total Monthly Loan Burden (BDT)</span>
+                <button type="button" class="info-btn" data-info="info_loan_burden" aria-label="More info">i</button>
+              </div>
+              <input type="number" name="loanBurden" min="0" inputmode="numeric" value="0" />
+            </div>
+
+            <div class="form-group">
+              <div class="field-label">
+                <span data-i18n="field_expected_amount">Expected Loan Amount (BDT)</span>
+                <button type="button" class="info-btn" data-info="info_amount" aria-label="More info">i</button>
+              </div>
               <input type="number" name="amount" min="0" inputmode="numeric" required />
             </div>
+
+            <div class="form-group">
+              <div class="field-label">
+                <span data-i18n="field_tenor_app">Tenor (years)</span>
+                <button type="button" class="info-btn" data-info="info_tenor" aria-label="More info">i</button>
+              </div>
+              <input type="number" name="tenor" min="1" max="25" required />
+            </div>
+
+            <button type="submit" class="btn-submit" data-i18n="form_submit">Submit Application</button>
+          </form>
+        </section>
+
+        <aside class="calc-widget">
+          <h2 data-i18n="calc_title">EMI Calculator</h2>
+
+          <div class="calc-group">
+            <div class="calc-group-head">
+              <span class="calc-group-label" data-i18n="calc_amount">Loan Amount</span>
+              <span class="calc-group-value" id="calcAmountVal">৳ 25,00,000</span>
+            </div>
+            <input type="range" id="calcAmount" min="500000" max="50000000" step="100000" value="2500000" />
           </div>
 
-          <div class="form-group">
-            <label data-i18n="form_tenor">Tenor (years)</label>
-            <input type="number" name="tenor" min="1" max="25" required />
+          <div class="calc-group">
+            <div class="calc-group-head">
+              <span class="calc-group-label" data-i18n="calc_rate">Interest Rate</span>
+              <span class="calc-group-value" id="calcRateVal">10.00%</span>
+            </div>
+            <input type="range" id="calcRate" min="6" max="20" step="0.25" value="10" />
           </div>
 
-          <div class="form-group">
-            <label data-i18n="form_address">Present Address</label>
-            <textarea name="address" rows="3" required></textarea>
+          <div class="calc-group">
+            <div class="calc-group-head">
+              <span class="calc-group-label" data-i18n="calc_tenor">Tenor</span>
+              <span class="calc-group-value" id="calcTenorVal">15 years</span>
+            </div>
+            <input type="range" id="calcTenor" min="1" max="25" step="1" value="15" />
           </div>
 
-          <button type="submit" class="btn-submit" data-i18n="form_submit">Submit Application</button>
-        </form>
-      </section>
-
-      <aside class="calc-widget">
-        <h2 data-i18n="calc_title">EMI Calculator</h2>
-
-        <div class="calc-group">
-          <div class="calc-group-head">
-            <span class="calc-group-label" data-i18n="calc_amount">Loan Amount</span>
-            <span class="calc-group-value" id="calcAmountVal">৳ 25,00,000</span>
+          <div class="calc-result">
+            <div class="calc-result-row"><span data-i18n="calc_emi">Monthly EMI</span><strong id="calcEmi">৳ —</strong></div>
+            <div class="calc-result-row"><span data-i18n="calc_interest">Total Interest</span><strong id="calcInterest">৳ —</strong></div>
+            <div class="calc-result-row"><span data-i18n="calc_total">Total Payment</span><strong id="calcTotal">৳ —</strong></div>
           </div>
-          <input type="range" id="calcAmount" min="500000" max="50000000" step="100000" value="2500000" />
-        </div>
+        </aside>
 
-        <div class="calc-group">
-          <div class="calc-group-head">
-            <span class="calc-group-label" data-i18n="calc_rate">Interest Rate</span>
-            <span class="calc-group-value" id="calcRateVal">10.00%</span>
-          </div>
-          <input type="range" id="calcRate" min="6" max="20" step="0.25" value="10" />
-        </div>
-
-        <div class="calc-group">
-          <div class="calc-group-head">
-            <span class="calc-group-label" data-i18n="calc_tenor">Tenor</span>
-            <span class="calc-group-value" id="calcTenorVal">15 years</span>
-          </div>
-          <input type="range" id="calcTenor" min="1" max="25" step="1" value="15" />
-        </div>
-
-        <div class="calc-result">
-          <div class="calc-result-row"><span data-i18n="calc_emi">Monthly EMI</span><strong id="calcEmi">৳ —</strong></div>
-          <div class="calc-result-row"><span data-i18n="calc_interest">Total Interest</span><strong id="calcInterest">৳ —</strong></div>
-          <div class="calc-result-row"><span data-i18n="calc_total">Total Payment</span><strong id="calcTotal">৳ —</strong></div>
-        </div>
       </aside>
 
     </div>
-
-    <section class="info-section">
-      <h2 data-i18n="section_purpose">Purpose</h2>
-      <p>A Home Loan can be used for the following purposes:</p>
-      <ul>
-        <li>Purchase of a new apartment or independent house</li>
-        <li>Construction on owned residential land</li>
-        <li>Renovation, extension or interior finishing of an existing home</li>
-        <li>Take-over (refinancing) of an existing home loan from another bank or NBFI</li>
-        <li>Purchase of residential land for self-construction (with construction plan)</li>
-      </ul>
-      <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
-    </section>
-
-    <section class="info-section">
-      <h2 data-i18n="section_eligibility">Eligibility</h2>
-      <ul>
-        <li>Bangladeshi national</li>
-        <li>Age: 21–65 years (at loan maturity)</li>
-        <li>Minimum monthly income: BDT 40,000 (salaried) or equivalent verifiable business income</li>
-        <li>Minimum 2 years of employment or business continuity</li>
-        <li>Acceptable credit history per Credit Information Bureau (CIB) report</li>
-      </ul>
-      <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
-    </section>
-
-    <section class="info-section">
-      <h2 data-i18n="section_policy">Policy Highlights</h2>
-      <ul>
-        <li>Maximum loan amount: up to BDT 5 crore, capped at 70% of property market value</li>
-        <li>Tenor: 1–25 years</li>
-        <li>Interest rate: 9.50% – 12.00% per annum (floating, subject to product policy)</li>
-        <li>Processing fee: 1.0% of approved loan amount (one-time)</li>
-        <li>Partial / full prepayment allowed after 12 months with 0.5% fee on the prepaid balance</li>
-        <li>Property mortgage and a personal guarantor are required</li>
-      </ul>
-      <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
-    </section>
-
-    <section class="info-section">
-      <h2 data-i18n="section_documents">Required Documents</h2>
-      <ul>
-        <li>NID copy (both sides) of applicant and co-applicant</li>
-        <li>Latest 6 months' bank statement (primary account)</li>
-        <li>Salary certificate, pay slip and form-V (for salaried applicants)</li>
-        <li>Trade license and 12 months' business account statement (for business owners)</li>
-        <li>e-TIN certificate and most recent tax return acknowledgment</li>
-        <li>2 passport-size photos</li>
-        <li>Property documents: title deed, mutation, rent receipt, RAJUK/CDA approval</li>
-        <li>Approved building plan (for construction or renovation)</li>
-      </ul>
-    </section>
-
-    <section class="info-section">
-      <h2 data-i18n="section_terms">Terms &amp; Conditions</h2>
-      <ol>
-        <li>Loan disbursement is subject to credit approval, verification and successful property valuation.</li>
-        <li>Interest rates are floating and may be revised in line with Bangladesh Bank guidelines.</li>
-        <li>Late payment incurs a penalty as per the policy in effect at the time of default.</li>
-        <li>Property mortgage in favour of IDLC Finance PLC is required before disbursement.</li>
-        <li>Applicant must maintain a primary banking relationship for EMI auto-debit.</li>
-        <li>All disputes are subject to the jurisdiction of the courts of Bangladesh.</li>
-      </ol>
-      <p class="info-note" data-i18n="placeholder_disclaimer">Sample content for prototype — replace with IDLC's actual specifications.</p>
-    </section>
-
-    <section class="info-section">
-      <h2 data-i18n="section_faqs">Frequently Asked Questions</h2>
-
-      <details class="faq-item">
-        <summary>What is the maximum Home Loan amount I can get?</summary>
-        <p>Up to BDT 5 crore, subject to your repayment capacity and capped at 70% of the property's market value (the lower of the two applies).</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>How long does approval take?</summary>
-        <p>Typically 7–14 business days after submission of complete documentation and property valuation.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>Can I prepay my loan early?</summary>
-        <p>Yes. Partial or full prepayment is allowed after 12 months from disbursement, at a fee of 0.5% on the prepaid balance.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>Is a guarantor required?</summary>
-        <p>One personal guarantor is generally required, depending on the loan amount and applicant profile.</p>
-      </details>
-
-      <details class="faq-item">
-        <summary>Are joint applications allowed?</summary>
-        <p>Yes — spouse, parents or siblings may apply jointly. Combined income improves eligibility.</p>
-      </details>
-    </section>
-
   </main>
 
   <script src="translations.js"></script>

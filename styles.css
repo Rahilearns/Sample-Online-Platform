@@ -1074,7 +1074,46 @@ body.apply-page {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ---- Restructured product page: 2-col layout
+        Left: info-col (all policy sections, full height)
+        Right: action-col (form on top, calculator below)
+        On mobile: action goes ABOVE info so the form is reachable. ---- */
+.product-layout {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 28px;
+  margin-top: 28px;
+  align-items: start;
+}
+.product-info-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.product-action-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.product-action-col .calc-widget {
+  position: static;
+  margin: 0;
+}
+.product-action-col .loan-form-card {
+  padding: 28px;
+}
+.product-action-col .loan-form .form-row {
+  grid-template-columns: 1fr; /* narrower column → stack form fields */
+}
+
 /* ---- Responsive ---- */
+@media (max-width: 960px) {
+  .product-layout { grid-template-columns: 1fr; gap: 20px; }
+  .product-info-col { order: 2; }
+  .product-action-col { order: 1; }
+  .product-action-col .loan-form .form-row { grid-template-columns: 1fr 1fr; }
+}
 @media (max-width: 900px) {
   .product-hero-grid { grid-template-columns: 1fr; }
   .calc-widget { position: static; }
@@ -1243,6 +1282,196 @@ body.apply-page {
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
+}
+
+/* ============================================================
+   Chooser pages (apply.html / apply-individual.html / apply-business.html)
+   Smaller, centered title so the cards below get the visual focus.
+   Excludes product detail pages by selector.
+   ============================================================ */
+.apply-page:not(.product-page) .apply-main {
+  text-align: center;
+}
+.apply-page:not(.product-page) .apply-eyebrow {
+  display: inline-block;
+}
+.apply-page:not(.product-page) .apply-title {
+  font-size: clamp(22px, 3.5vw, 34px);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.apply-page:not(.product-page) .apply-subtitle {
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.apply-page:not(.product-page) .back-link {
+  display: inline-flex;
+}
+.apply-page:not(.product-page) .loan-options {
+  text-align: left; /* let cards keep their own (centered) layout */
+}
+
+/* ============================================================
+   Multi-stage application form
+   Stage 1: Name + Phone + [Request OTP]
+   Stage 2: OTP boxes + [Submit OTP]
+   Stage 3: full loan-application form
+   ============================================================ */
+.field-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.field-label > span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid var(--text-light);
+  background: white;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  font-style: italic;
+  font-family: 'Times New Roman', Georgia, serif;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.info-btn:hover,
+.info-btn:focus-visible {
+  background: var(--idlc-green-light);
+  border-color: var(--idlc-green);
+  color: var(--idlc-green-dark);
+  outline: none;
+}
+
+.info-tooltip {
+  position: absolute;
+  background: #1a1a1a;
+  color: rgba(255,255,255,0.95);
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 240px;
+  z-index: 2000;
+  line-height: 1.45;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.20);
+  pointer-events: none;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* OTP boxes */
+.otp-group { margin: 14px 0 8px; }
+.otp-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.otp-boxes {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.otp-boxes input {
+  width: 54px;
+  height: 54px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: white;
+  color: var(--text);
+  padding: 0;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.otp-boxes input:focus {
+  outline: none;
+  border-color: var(--idlc-green);
+  box-shadow: 0 0 0 3px rgba(218,31,38,0.15);
+}
+.otp-boxes input.filled {
+  border-color: var(--idlc-green);
+  background: var(--idlc-green-light);
+}
+.otp-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+.otp-hint code {
+  background: var(--idlc-green-light);
+  color: var(--idlc-green-dark);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 11.5px;
+}
+.otp-error {
+  font-size: 12.5px;
+  color: var(--idlc-green-dark);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+.otp-error::before { content: "⚠"; }
+
+/* Existing-customer question */
+.form-question {
+  background: var(--idlc-green-light);
+  border: 1px solid rgba(218,31,38,0.18);
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.form-question-text {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.form-radio-group { display: inline-flex; gap: 14px; }
+.form-radio-group label {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  cursor: pointer;
+  font-weight: 500 !important;
+  margin-bottom: 0 !important;
+  user-select: none;
+}
+.form-radio-group input[type="radio"] {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--idlc-green);
 }
 
 /* ============================================================
