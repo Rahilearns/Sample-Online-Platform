@@ -1424,10 +1424,53 @@ body.modal-open { overflow: hidden; }
 }
 .product-action-col .calc-widget > .calc-result {
   grid-column: 2;
-  grid-row: 2 / -1;
+  grid-row: 2 / span 3;
   margin-top: 0;
-  align-self: start;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+.product-action-col .calc-widget > .calc-result .calc-result-row {
+  padding: 8px 0;
+}
+
+/* Centered OTP boxes + error message */
+.otp-group { text-align: center; }
+.otp-label { text-align: center; }
+.otp-boxes { justify-content: center; }
+.otp-hint { text-align: center; }
+.otp-error { justify-content: center; }
+
+/* Form-group spanning both columns in the 2-col loanForm grid */
+.product-action-col #loanForm > .form-group--full {
+  grid-column: 1 / -1;
+}
+
+/* Date of Birth: 3 inline fields (day | month | year) */
+.dob-group {
+  display: grid;
+  grid-template-columns: 70px 1fr 90px;
+  gap: 10px;
+}
+.dob-group input,
+.dob-group select {
+  width: 100%;
+  padding: 11px 10px;
+}
+
+/* Success panel — warning variant for ineligible applications */
+.form-success.is-warning {
+  background: linear-gradient(160deg, #fff7ed 0%, #fde4c8 100%);
+  border-color: #fbbf24;
+  animation: form-success-in 0.35s ease both;
+}
+.form-success.is-warning .form-success-icon {
+  background: rgba(245, 158, 11, 0.22);
+  color: #d97706;
+}
+.form-success.is-warning .form-success-title { color: #92400e; }
+.form-success.is-warning .form-success-msg { color: #b45309; }
 
 /* Collapse the new 2-column form + calc back to single column below this width */
 @media (max-width: 1200px) {

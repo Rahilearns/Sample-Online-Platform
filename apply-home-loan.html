@@ -165,7 +165,25 @@
                 <span class="req"><span data-i18n="field_dob">Date of Birth</span></span>
                 <button type="button" class="info-btn" data-info="info_dob" aria-label="More info">i</button>
               </div>
-              <input type="date" name="dob" required />
+              <div class="dob-group">
+                <input type="text" inputmode="numeric" name="dobDay" data-i18n-placeholder="dob_day" placeholder="Day" pattern="[0-9]{1,2}" maxlength="2" required />
+                <select name="dobMonth" required>
+                  <option value="" data-i18n="dob_month_select">Month</option>
+                  <option value="01" data-i18n="month_jan">January</option>
+                  <option value="02" data-i18n="month_feb">February</option>
+                  <option value="03" data-i18n="month_mar">March</option>
+                  <option value="04" data-i18n="month_apr">April</option>
+                  <option value="05" data-i18n="month_may">May</option>
+                  <option value="06" data-i18n="month_jun">June</option>
+                  <option value="07" data-i18n="month_jul">July</option>
+                  <option value="08" data-i18n="month_aug">August</option>
+                  <option value="09" data-i18n="month_sep">September</option>
+                  <option value="10" data-i18n="month_oct">October</option>
+                  <option value="11" data-i18n="month_nov">November</option>
+                  <option value="12" data-i18n="month_dec">December</option>
+                </select>
+                <input type="text" inputmode="numeric" name="dobYear" data-i18n-placeholder="dob_year" placeholder="Year" pattern="[0-9]{4}" maxlength="4" required />
+              </div>
             </div>
 
             <div class="form-group">
@@ -242,7 +260,7 @@
               </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group form-group--full">
               <div class="field-label">
                 <span class="req"><span data-i18n="field_income_app">Total Monthly Income (BDT)</span></span>
                 <button type="button" class="info-btn" data-info="info_income" aria-label="More info">i</button>
@@ -295,22 +313,21 @@
             <button type="submit" class="btn-submit" data-i18n="form_submit">Submit Application</button>
           </form>
 
-          <!-- Success panel (revealed after Submit Application) -->
+          <!-- Success / ineligible panel (revealed after Submit Application) -->
           <div class="form-success" id="formSuccess" hidden role="status" aria-live="polite">
-            <div class="form-success-icon" aria-hidden="true">
+            <div class="form-success-icon" id="formSuccessIcon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M8 12l3 3 5-6"/>
               </svg>
             </div>
-            <h3 class="form-success-title" data-i18n="form_success_title">Application Received</h3>
-            <p class="form-success-msg" data-i18n="form_success_msg">Your application has been received. An IDLC representative will contact you within 8 working hours.</p>
-            <div class="form-success-tracking">
+            <h3 class="form-success-title" id="formSuccessTitle" data-i18n="app_submitted_title">Application Submitted</h3>
+            <p class="form-success-msg" id="formSuccessMsg"></p>
+            <div class="form-success-tracking" id="formSuccessTracking">
               <span class="form-success-tracking-label" data-i18n="tracking_label">Your tracking number</span>
               <code class="form-success-tracking-code" id="trackingNumber">—</code>
               <span class="form-success-tracking-hint" data-i18n="tracking_hint">Save this number to check your application status online.</span>
             </div>
-            <a href="apply.html" class="btn-submit-another" data-i18n="submit_another">Submit Another Application</a>
           </div>
         </section>
 
@@ -320,25 +337,25 @@
           <div class="calc-group">
             <div class="calc-group-head">
               <span class="calc-group-label" data-i18n="calc_amount">Loan Amount</span>
-              <span class="calc-group-value" id="calcAmountVal">৳ 25,00,000</span>
+              <span class="calc-group-value" id="calcAmountVal">৳ 0</span>
             </div>
-            <input type="range" id="calcAmount" min="500000" max="50000000" step="100000" value="2500000" />
+            <input type="range" id="calcAmount" min="0" max="50000000" step="100000" value="0" />
           </div>
 
           <div class="calc-group">
             <div class="calc-group-head">
               <span class="calc-group-label" data-i18n="calc_rate">Interest Rate</span>
-              <span class="calc-group-value" id="calcRateVal">10.00%</span>
+              <span class="calc-group-value" id="calcRateVal">0.00%</span>
             </div>
-            <input type="range" id="calcRate" min="6" max="20" step="0.25" value="10" />
+            <input type="range" id="calcRate" min="0" max="20" step="0.25" value="0" />
           </div>
 
           <div class="calc-group">
             <div class="calc-group-head">
               <span class="calc-group-label" data-i18n="calc_tenor">Tenor</span>
-              <span class="calc-group-value" id="calcTenorVal">15 years</span>
+              <span class="calc-group-value" id="calcTenorVal">0 years</span>
             </div>
-            <input type="range" id="calcTenor" min="1" max="25" step="1" value="15" />
+            <input type="range" id="calcTenor" min="0" max="25" step="1" value="0" />
           </div>
 
           <div class="calc-result">

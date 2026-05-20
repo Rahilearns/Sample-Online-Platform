@@ -8,6 +8,10 @@
     cif: "553577",
     email: "Imahfuzul@gmail.com"
   };
+  // Eligibility rules
+  var RATE = 13;             // annual % for eligibility + applicant-side EMI projection
+  var THRESHOLD = 0.70;      // total monthly load must be <= 70% of monthly income
+  var MIN_LOAN = 2500000;    // BDT 25 lakh — minimum proposed loan if requested exceeds eligibility
 
   function $(id) { return document.getElementById(id); }
   function $$(sel) { return document.querySelectorAll(sel); }
@@ -29,22 +33,40 @@
     return rest + "," + lastThree;
   }
 
-  // ============ EMI Calculator ============
+  // EMI: P × r × (1+r)^n / ((1+r)^n − 1)  — zero-safe
+  function computeEMI(P, annualRate, years) {
+    var n = years * 12;
+    var r = annualRate / 12 / 100;
+    if (P <= 0 || n <= 0) return 0;
+    if (r === 0) return P / n;
+    return P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  }
+  // Inverse: max loan principal for a given EMI ceiling
+  function computeMaxLoan(maxEmi, annualRate, years) {
+    var n = years * 12;
+    var r = annualRate / 12 / 100;
+    if (maxEmi <= 0 || n <= 0) return 0;
+    if (r === 0) return maxEmi * n;
+    return maxEmi * ((Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n)));
+  }
+
+  // ============ EMI Calculator (live sliders) ============
   function calcEMI() {
     var aEl = $("calcAmount"), rEl = $("calcRate"), tEl = $("calcTenor");
     if (!aEl || !rEl || !tEl) return;
-    var P = parseFloat(aEl.value);
-    var annualRate = parseFloat(rEl.value);
-    var years = parseFloat(tEl.value);
-    var n = years * 12;
-    var r = annualRate / 12 / 100;
-    var emi;
-    if (r === 0) emi = P / n;
-    else emi = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
-    var totalPayment = emi * n;
+
+    var P = parseFloat(aEl.value) || 0;
+    var annualRate = parseFloat(rEl.value) || 0;
+    var years = parseFloat(tEl.value) || 0;
+
+    var emi = computeEMI(P, annualRate, years);
+    var totalPayment = emi * years * 12;
     var totalInterest = totalPayment - P;
+    if (totalInterest < 0) totalInterest = 0;
+
     var dict = getDict();
     var yearWord = years === 1 ? (dict.calc_year || "year") : (dict.calc_years || "years");
+
     $("calcAmountVal").textContent = "৳ " + formatBDT(P);
     $("calcRateVal").textContent   = annualRate.toFixed(2) + "%";
     $("calcTenorVal").textContent  = years + " " + yearWord;
@@ -86,12 +108,15 @@
     input.addEventListener("input", reformat);
     if (input.value && /\d/.test(input.value)) reformat();
   }
-
   function initAutoComma() {
-    $$('#loanForm input[inputmode="numeric"]').forEach(attachAutoComma);
+    $$('#loanForm input[inputmode="numeric"]').forEach(function (el) {
+      // skip DOB day/year (small numbers, no commas)
+      if (el.name === "dobDay" || el.name === "dobYear") return;
+      attachAutoComma(el);
+    });
   }
 
-  // ============ Read purpose + mode from URL into hidden inputs, chip & title ============
+  // ============ URL params → hidden inputs + chip + title mode ============
   function initContextFromUrl() {
     var params = new URLSearchParams(window.location.search);
     var purpose = params.get("purpose");
@@ -102,10 +127,8 @@
     if (mode) {
       $$('input[name="financingMode"]').forEach(function (el) { el.value = mode; });
     }
-    // Chip shows just the purpose (mode now lives in the H1)
     var chip = $("contextChip");
     if (chip && purpose) chip.textContent = purpose;
-    // Append " | <mode> Financing" to the H1 product title
     if (mode) {
       var modeEl = $("titleMode");
       if (modeEl) {
@@ -131,7 +154,6 @@
       form.querySelectorAll("[required]").forEach(function (el) {
         requiredNames.add(el.name);
       });
-      // Monthly loan burden only counts when hasBurden = yes
       var burdenChecked = form.querySelector('input[name="hasBurden"]:checked');
       var hasBurden = burdenChecked && burdenChecked.value === "yes";
       if (!hasBurden) requiredNames.delete("loanBurden");
@@ -156,7 +178,6 @@
       fill.style.width = pct + "%";
       text.textContent = pct + "%";
     }
-
     form.addEventListener("input", update);
     form.addEventListener("change", update);
     update();
@@ -166,40 +187,15 @@
   function generateTrackingNumber() {
     var d = new Date();
     var yy = String(d.getFullYear()).slice(-2);
-    var mm = String(d.getMonth() + 1);
-    if (mm.length < 2) mm = "0" + mm;
-    var dd = String(d.getDate());
-    if (dd.length < 2) dd = "0" + dd;
+    var mm = String(d.getMonth() + 1); if (mm.length < 2) mm = "0" + mm;
+    var dd = String(d.getDate());      if (dd.length < 2) dd = "0" + dd;
     var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     var rand = "";
-    for (var i = 0; i < 4; i++) {
-      rand += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    for (var i = 0; i < 4; i++) rand += chars.charAt(Math.floor(Math.random() * chars.length));
     return "IDLC-" + yy + mm + dd + "-" + rand;
   }
 
-  // ============ DOB bounds (18+ to 100) ============
-  function initDobBounds() {
-    var dob = document.querySelector('#otpForm input[name="dob"]');
-    if (!dob) return;
-    function fmt(d) {
-      var y = d.getFullYear();
-      var m = String(d.getMonth() + 1);
-      var da = String(d.getDate());
-      if (m.length < 2) m = "0" + m;
-      if (da.length < 2) da = "0" + da;
-      return y + "-" + m + "-" + da;
-    }
-    var today = new Date();
-    var max = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-    var min = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
-    dob.setAttribute("max", fmt(max));
-    dob.setAttribute("min", fmt(min));
-  }
-
   // ============ Existing-client API simulation ============
-  // If NID matches EXISTING_NID, pre-fill name/cif/email in loanForm; otherwise
-  // copy name from the OTP gate (so the visitor doesn't re-type it).
   function applyClientLookup(otpForm, loanForm) {
     var nidInput  = otpForm.querySelector('input[name="nid"]');
     var nameOtp   = otpForm.querySelector('input[name="name"]');
@@ -213,18 +209,42 @@
       if (cifInput)   cifInput.value   = EXISTING_CLIENT.cif;
       if (emailInput) emailInput.value = EXISTING_CLIENT.email;
     } else {
-      // Carry over the name from OTP gate so the visitor doesn't retype it
       if (nameOtp && nameLoan && !nameLoan.value) nameLoan.value = nameOtp.value;
     }
   }
 
-  // ============ OTP gate & multi-stage form ============
+  // ============ DOB (3 fields) validation helper ============
+  function validateDob(dobDay, dobMonth, dobYear) {
+    var day   = parseInt(dobDay.value,   10);
+    var month = parseInt(dobMonth.value, 10);
+    var year  = parseInt(dobYear.value,  10);
+    if (!day || !month || !year) {
+      return { ok: false, focus: !day ? dobDay : (!month ? dobMonth : dobYear), msg: "Please enter your date of birth (day, month, and year)." };
+    }
+    var dob = new Date(year, month - 1, day);
+    if (dob.getFullYear() !== year || dob.getMonth() !== month - 1 || dob.getDate() !== day) {
+      return { ok: false, focus: dobDay, msg: "Please enter a valid date of birth." };
+    }
+    var today = new Date();
+    var age = today.getFullYear() - dob.getFullYear();
+    var md = today.getMonth() - dob.getMonth();
+    if (md < 0 || (md === 0 && today.getDate() < dob.getDate())) age--;
+    if (age < 18 || age > 100) {
+      return { ok: false, focus: dobYear, msg: "Applicant must be at least 18 years old." };
+    }
+    return { ok: true };
+  }
+
+  // ============ OTP gate ============
   function initOtpFlow() {
     var otpForm = $("otpForm");
     if (!otpForm) return;
 
     var nameInput  = otpForm.querySelector('input[name="name"]');
     var phoneInput = otpForm.querySelector('input[name="phone"]');
+    var dobDay     = otpForm.querySelector('input[name="dobDay"]');
+    var dobMonth   = otpForm.querySelector('select[name="dobMonth"]');
+    var dobYear    = otpForm.querySelector('input[name="dobYear"]');
     var otpGroup   = otpForm.querySelector(".otp-group");
     var otpBoxes   = otpForm.querySelectorAll(".otp-boxes input");
     var otpError   = otpForm.querySelector(".otp-error");
@@ -259,9 +279,7 @@
 
       if (stage === "request") {
         if (nameInput && !nameInput.value.trim()) {
-          nameInput.focus();
-          showToast("Please enter your name.", true);
-          return;
+          nameInput.focus(); showToast("Please enter your name.", true); return;
         }
         var nidInput = otpForm.querySelector('input[name="nid"]');
         if (nidInput && !/^[0-9]{10,17}$/.test(nidInput.value.trim())) {
@@ -269,32 +287,21 @@
           showToast("Please enter a valid NID number (10, 13, or 17 digits).", true);
           return;
         }
-        var dobInput = otpForm.querySelector('input[name="dob"]');
-        if (dobInput) {
-          if (!dobInput.value) {
-            dobInput.focus();
-            showToast("Please enter your date of birth.", true);
-            return;
-          }
-          var dob = new Date(dobInput.value);
-          var today = new Date();
-          var age = today.getFullYear() - dob.getFullYear();
-          var monthDiff = today.getMonth() - dob.getMonth();
-          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) age--;
-          if (isNaN(dob.getTime()) || age < 18 || age > 100) {
-            dobInput.focus();
-            showToast("Applicant must be at least 18 years old.", true);
-            return;
-          }
+        if (dobDay && dobMonth && dobYear) {
+          var dobCheck = validateDob(dobDay, dobMonth, dobYear);
+          if (!dobCheck.ok) { dobCheck.focus.focus(); showToast(dobCheck.msg, true); return; }
         }
         if (!/^01[0-9]{9}$/.test(phoneInput.value)) {
           phoneInput.focus();
           showToast("Please enter a valid Bangladeshi mobile number (01XXXXXXXXX).", true);
           return;
         }
-        if (nameInput)  nameInput.setAttribute("readonly", "");
-        if (nidInput)   nidInput.setAttribute("readonly", "");
-        if (dobInput)   dobInput.setAttribute("readonly", "");
+
+        if (nameInput) nameInput.setAttribute("readonly", "");
+        if (nidInput)  nidInput.setAttribute("readonly", "");
+        if (dobDay)    dobDay.setAttribute("readonly", "");
+        if (dobMonth)  dobMonth.setAttribute("disabled", "");
+        if (dobYear)   dobYear.setAttribute("readonly", "");
         phoneInput.setAttribute("readonly", "");
         otpGroup.hidden = false;
         otpError.hidden = true;
@@ -310,13 +317,11 @@
           if (loanForm) {
             applyClientLookup(otpForm, loanForm);
             loanForm.hidden = false;
-            // re-format auto-comma fields after population
             $$('#loanForm input[inputmode="numeric"]').forEach(function (el) {
-              if (el.value && /\d/.test(el.value)) {
+              if (el.value && /\d/.test(el.value) && el.name !== "dobDay" && el.name !== "dobYear") {
                 el.dispatchEvent(new Event("input", { bubbles: true }));
               }
             });
-            // refresh progress bar
             loanForm.dispatchEvent(new Event("input", { bubbles: true }));
             var firstField = loanForm.querySelector(".form-group");
             setTimeout(function () {
@@ -336,7 +341,7 @@
     });
   }
 
-  // ============ Loan-burden Y/N toggle (show/hide Monthly Loan Burden) ============
+  // ============ Loan-burden Y/N toggle ============
   function initBurdenToggle() {
     var radios = $$('input[name="hasBurden"]');
     var burdenGroup = $("burdenGroup");
@@ -395,7 +400,123 @@
     window.addEventListener("resize", hideTip);
   }
 
-  // ============ Final submission: two declarations, tracking, success ============
+  // ============ Sync EMI calculator from form fields ============
+  // When the visitor types into Expected Loan Amount or Loan Term, mirror those
+  // values into the calculator sliders (rate is locked to RATE for the projection).
+  // The applicant can still drag the sliders afterwards without touching the form.
+  function syncCalcFromForm() {
+    var loanForm = $("loanForm");
+    if (!loanForm || loanForm.hidden) return;
+    var amountField = loanForm.querySelector('input[name="amount"]');
+    var tenorField  = loanForm.querySelector('input[name="tenor"]');
+    var calcAmount  = $("calcAmount");
+    var calcTenor   = $("calcTenor");
+    var calcRate    = $("calcRate");
+    if (calcAmount && amountField) {
+      var amt = parseInt((amountField.value || "").replace(/,/g, ""), 10) || 0;
+      // clamp to slider's max
+      var maxA = parseFloat(calcAmount.max) || amt;
+      calcAmount.value = Math.min(amt, maxA);
+    }
+    if (calcTenor && tenorField) {
+      var t = parseInt((tenorField.value || "").replace(/,/g, ""), 10) || 0;
+      var maxT = parseFloat(calcTenor.max) || t;
+      calcTenor.value = Math.min(t, maxT);
+    }
+    if (calcRate) calcRate.value = RATE;
+    calcEMI();
+  }
+  function initFormCalcSync() {
+    var loanForm = $("loanForm");
+    if (!loanForm) return;
+    var amt = loanForm.querySelector('input[name="amount"]');
+    var ten = loanForm.querySelector('input[name="tenor"]');
+    if (amt) amt.addEventListener("input", syncCalcFromForm);
+    if (ten) ten.addEventListener("input", syncCalcFromForm);
+  }
+
+  // ============ Eligibility check on Submit ============
+  function checkEligibility(form) {
+    function num(name) {
+      var el = form.querySelector('input[name="' + name + '"]');
+      if (!el) return 0;
+      return parseInt((el.value || "0").replace(/,/g, ""), 10) || 0;
+    }
+    var income          = num("income");
+    var burdenChecked   = form.querySelector('input[name="hasBurden"]:checked');
+    var hasBurden       = burdenChecked && burdenChecked.value === "yes";
+    var monthlyBurden   = hasBurden ? num("loanBurden") : 0;
+    var expectedAmount  = num("amount");
+    var years           = num("tenor");
+    var maxLoad         = income * THRESHOLD;
+
+    // Even before computing new EMI, if existing burden already exceeds 70%, reject
+    if (monthlyBurden > maxLoad) return { status: "over_burden" };
+
+    var newEmi    = computeEMI(expectedAmount, RATE, years);
+    var totalLoad = newEmi + monthlyBurden;
+
+    if (totalLoad <= maxLoad) {
+      return { status: "eligible", amount: expectedAmount };
+    }
+
+    // Requested amount is too high. Find the max loan that still fits the threshold.
+    var roomForNewEmi = maxLoad - monthlyBurden;
+    if (roomForNewEmi <= 0) return { status: "over_burden" };
+
+    var maxLoan = computeMaxLoan(roomForNewEmi, RATE, years);
+    maxLoan = Math.floor(maxLoan / 1000) * 1000;  // round down to nearest BDT 1,000
+
+    if (maxLoan >= MIN_LOAN) {
+      return { status: "reduced", amount: maxLoan };
+    }
+    return { status: "ineligible" };
+  }
+
+  var SVG_OK = '<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>';
+  var SVG_WARN = '<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L1 21h22L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="12" y1="17" x2="12" y2="17.5"/></svg>';
+
+  function showResult(form, result) {
+    var dict = getDict();
+    var success = $("formSuccess");
+    var titleEl = $("formSuccessTitle");
+    var msgEl   = $("formSuccessMsg");
+    var iconEl  = $("formSuccessIcon");
+    var tracking= $("formSuccessTracking");
+
+    if (result.status === "eligible" || result.status === "reduced") {
+      success.classList.remove("is-warning");
+      iconEl.innerHTML = SVG_OK;
+      titleEl.setAttribute("data-i18n", "app_submitted_title");
+      titleEl.textContent = dict.app_submitted_title || "Application Submitted";
+      var amountText = formatBDT(result.amount || 0);
+      var tpl = dict.eligibility_eligible_html ||
+        "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
+      msgEl.removeAttribute("data-i18n");
+      msgEl.setAttribute("data-i18n-html", "eligibility_eligible_html");
+      msgEl.dataset.amount = amountText;
+      msgEl.innerHTML = tpl.replace("{amount}", amountText);
+      if (tracking) tracking.hidden = false;
+      var trackCode = $("trackingNumber");
+      if (trackCode) trackCode.textContent = generateTrackingNumber();
+    } else {
+      // over_burden or ineligible — show warning state
+      success.classList.add("is-warning");
+      iconEl.innerHTML = SVG_WARN;
+      titleEl.setAttribute("data-i18n", "app_ineligible_title");
+      titleEl.textContent = dict.app_ineligible_title || "Application Could Not Be Processed";
+      msgEl.removeAttribute("data-i18n-html");
+      msgEl.setAttribute("data-i18n", "eligibility_ineligible");
+      msgEl.textContent = dict.eligibility_ineligible ||
+        "Your monthly income will not cover your loan burden and IDLC's risk appetite.";
+      if (tracking) tracking.hidden = true;
+    }
+
+    form.hidden = true;
+    success.hidden = false;
+    success.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   function initLoanForm() {
     var form = $("loanForm");
     if (!form) return;
@@ -410,14 +531,17 @@
         else if (dec2 && !dec2.checked) dec2.focus();
         return;
       }
-      var success = $("formSuccess");
-      var trackEl = $("trackingNumber");
-      if (trackEl) trackEl.textContent = generateTrackingNumber();
-      form.hidden = true;
-      if (success) {
-        success.hidden = false;
-        success.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+      var result = checkEligibility(form);
+      showResult(form, result);
+    });
+  }
+
+  // Translate dynamic placeholders that use `data-i18n-placeholder`
+  function applyPlaceholderTranslations() {
+    var dict = getDict();
+    $$('input[data-i18n-placeholder], select[data-i18n-placeholder], textarea[data-i18n-placeholder]').forEach(function (el) {
+      var key = el.getAttribute("data-i18n-placeholder");
+      if (key && dict[key] != null) el.setAttribute("placeholder", dict[key]);
     });
   }
 
@@ -429,15 +553,21 @@
       });
       calcEMI();
       $$(".lang-btn").forEach(function (btn) {
-        btn.addEventListener("click", function () { setTimeout(calcEMI, 60); });
+        btn.addEventListener("click", function () {
+          setTimeout(function () {
+            calcEMI();
+            applyPlaceholderTranslations();
+          }, 60);
+        });
       });
     }
-    initDobBounds();
+    applyPlaceholderTranslations();
     initOtpFlow();
     initBurdenToggle();
     initInfoButtons();
     initAutoComma();
     initProgressBar();
+    initFormCalcSync();
     initLoanForm();
   }
 

@@ -109,6 +109,29 @@ window.TRANSLATIONS = {
     tracking_hint: "Save this number to check your application status online.",
     submit_another: "Submit Another Application",
 
+    // Date of Birth (3 inline fields)
+    dob_day: "Day",
+    dob_month_select: "Month",
+    dob_year: "Year",
+    month_jan: "January",
+    month_feb: "February",
+    month_mar: "March",
+    month_apr: "April",
+    month_may: "May",
+    month_jun: "June",
+    month_jul: "July",
+    month_aug: "August",
+    month_sep: "September",
+    month_oct: "October",
+    month_nov: "November",
+    month_dec: "December",
+
+    // Eligibility result messages
+    app_submitted_title: "Application Submitted",
+    app_ineligible_title: "Application Could Not Be Processed",
+    eligibility_eligible_html: "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.",
+    eligibility_ineligible: "Your monthly income will not cover your loan burden and IDLC's risk appetite. We are unable to process this application at the requested amount.",
+
     // Pre-filter modal
     modal_title_home: "Tell us about your Home Loan",
     modal_title_car: "Tell us about your Car Loan",
@@ -382,6 +405,29 @@ window.TRANSLATIONS = {
     tracking_label: "আপনার ট্র্যাকিং নম্বর",
     tracking_hint: "অনলাইনে আবেদনের অগ্রগতি দেখতে এই নম্বরটি সংরক্ষণ করুন।",
     submit_another: "আরেকটি আবেদন করুন",
+
+    // Date of Birth (3 inline fields)
+    dob_day: "দিন",
+    dob_month_select: "মাস",
+    dob_year: "বছর",
+    month_jan: "জানুয়ারি",
+    month_feb: "ফেব্রুয়ারি",
+    month_mar: "মার্চ",
+    month_apr: "এপ্রিল",
+    month_may: "মে",
+    month_jun: "জুন",
+    month_jul: "জুলাই",
+    month_aug: "আগস্ট",
+    month_sep: "সেপ্টেম্বর",
+    month_oct: "অক্টোবর",
+    month_nov: "নভেম্বর",
+    month_dec: "ডিসেম্বর",
+
+    // Eligibility result messages
+    app_submitted_title: "আবেদন জমা দেওয়া হয়েছে",
+    app_ineligible_title: "আবেদন প্রক্রিয়া করা যায়নি",
+    eligibility_eligible_html: "অভিনন্দন, আপনি অনুরোধকৃত BDT <strong>{amount}</strong> ঋণের পরিমাণের জন্য যোগ্য, আপনার প্রদত্ত তথ্যের সত্যতা, আইডিএলসি-র আরও ক্রেডিট মূল্যায়ন, এবং প্রয়োজনীয় কাগজপত্রের সত্যতা ও বৈধতা সাপেক্ষে।",
+    eligibility_ineligible: "আপনার মাসিক আয় আপনার ঋণের চাপ ও আইডিএলসি-র ঝুঁকি ক্ষুধা পূরণ করবে না। বর্তমান অনুরোধকৃত পরিমাণে এই আবেদন প্রক্রিয়া করা সম্ভব নয়।",
 
     // Pre-filter modal
     modal_title_home: "আপনার গৃহ ঋণ সম্পর্কে বলুন",
