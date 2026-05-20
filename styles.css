@@ -843,9 +843,9 @@ body.apply-page {
    then full-width info sections (Purpose, Eligibility, etc.)
    ============================================================ */
 .product-page-main {
-  max-width: 1140px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 28px 32px 72px;
+  padding: 28px 40px 72px;
 }
 
 .product-hero-grid {
@@ -1375,10 +1375,69 @@ body.modal-open { overflow: hidden; }
         On mobile: action goes ABOVE info so the form is reachable. ---- */
 .product-layout {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 28px;
+  grid-template-columns: 600px minmax(0, 1fr);
+  gap: 36px;
   margin-top: 28px;
   align-items: start;
+}
+
+/* Title: product name + financing mode appended via JS */
+.apply-title .title-sep {
+  color: var(--text-muted);
+  font-weight: 400;
+  margin: 0 0.3em;
+}
+
+/* Wider action column: form fields in 2 columns, calculator in 2 columns */
+.product-action-col #loanForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+  align-content: start;
+}
+.product-action-col #loanForm > input[type="hidden"] { display: none; }
+.product-action-col #loanForm > .form-progress,
+.product-action-col #loanForm > .form-question,
+.product-action-col #loanForm > #burdenGroup,
+.product-action-col #loanForm > .form-terms,
+.product-action-col #loanForm > .btn-submit {
+  grid-column: 1 / -1;
+}
+.product-action-col #loanForm > .form-group { margin-bottom: 0; }
+
+/* Calculator: 2-column layout (sliders | results) in wide layouts */
+.product-action-col .calc-widget {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 16px 28px;
+  position: static;
+  margin: 0;
+  align-items: stretch;
+}
+.product-action-col .calc-widget > h2 {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+.product-action-col .calc-widget > .calc-group {
+  grid-column: 1;
+  margin-bottom: 0;
+}
+.product-action-col .calc-widget > .calc-result {
+  grid-column: 2;
+  grid-row: 2 / -1;
+  margin-top: 0;
+  align-self: start;
+}
+
+/* Collapse the new 2-column form + calc back to single column below this width */
+@media (max-width: 1200px) {
+  .product-action-col #loanForm { grid-template-columns: 1fr; }
+  .product-action-col .calc-widget { grid-template-columns: 1fr; }
+  .product-action-col .calc-widget > .calc-result {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 18px;
+  }
 }
 .product-info-col {
   min-width: 0;

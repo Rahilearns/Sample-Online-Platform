@@ -118,8 +118,8 @@ window.TRANSLATIONS = {
     modal_purpose_select: "Select purpose...",
     modal_financing_label: "Financing Mode",
     modal_financing_select: "Select mode...",
-    modal_financing_conventional: "Conventional",
-    modal_financing_islamic: "Islamic",
+    modal_financing_conventional: "Conventional Financing",
+    modal_financing_islamic: "Islamic Financing",
     modal_proceed: "Proceed",
     modal_close: "Close",
 
@@ -392,8 +392,8 @@ window.TRANSLATIONS = {
     modal_purpose_select: "উদ্দেশ্য নির্বাচন করুন...",
     modal_financing_label: "অর্থায়ন পদ্ধতি",
     modal_financing_select: "নির্বাচন করুন...",
-    modal_financing_conventional: "প্রচলিত",
-    modal_financing_islamic: "ইসলামিক",
+    modal_financing_conventional: "প্রচলিত অর্থায়ন",
+    modal_financing_islamic: "ইসলামিক অর্থায়ন",
     modal_proceed: "এগিয়ে যান",
     modal_close: "বন্ধ করুন",
 

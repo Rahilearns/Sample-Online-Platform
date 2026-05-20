@@ -91,7 +91,7 @@
     $$('#loanForm input[inputmode="numeric"]').forEach(attachAutoComma);
   }
 
-  // ============ Read purpose + mode from URL into hidden inputs + chip ============
+  // ============ Read purpose + mode from URL into hidden inputs, chip & title ============
   function initContextFromUrl() {
     var params = new URLSearchParams(window.location.search);
     var purpose = params.get("purpose");
@@ -102,12 +102,20 @@
     if (mode) {
       $$('input[name="financingMode"]').forEach(function (el) { el.value = mode; });
     }
+    // Chip shows just the purpose (mode now lives in the H1)
     var chip = $("contextChip");
-    if (chip && (purpose || mode)) {
-      var parts = [];
-      if (purpose) parts.push(purpose);
-      if (mode)    parts.push(mode);
-      chip.textContent = parts.join("  •  ");
+    if (chip && purpose) chip.textContent = purpose;
+    // Append " | <mode> Financing" to the H1 product title
+    if (mode) {
+      var modeEl = $("titleMode");
+      if (modeEl) {
+        var key = mode === "Islamic" ? "modal_financing_islamic" : "modal_financing_conventional";
+        modeEl.setAttribute("data-i18n", key);
+        var dict = getDict();
+        modeEl.textContent = dict[key] || (mode + " Financing");
+      }
+      var sep = document.querySelector(".apply-title .title-sep");
+      if (sep) sep.hidden = false;
     }
   }
 
