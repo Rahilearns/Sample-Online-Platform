@@ -50,12 +50,12 @@
     return maxEmi * ((Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n)));
   }
 
-  // ============ EMI Calculator (live sliders) ============
+  // ============ EMI Calculator (free-form text inputs) ============
   function calcEMI() {
     var aEl = $("calcAmount"), rEl = $("calcRate"), tEl = $("calcTenor");
     if (!aEl || !rEl || !tEl) return;
 
-    var P = parseFloat(aEl.value) || 0;
+    var P = parseFloat((aEl.value || "0").replace(/,/g, "")) || 0;
     var annualRate = parseFloat(rEl.value) || 0;
     var years = parseFloat(tEl.value) || 0;
 
@@ -64,12 +64,14 @@
     var totalInterest = totalPayment - P;
     if (totalInterest < 0) totalInterest = 0;
 
-    var dict = getDict();
-    var yearWord = years === 1 ? (dict.calc_year || "year") : (dict.calc_years || "years");
-
-    $("calcAmountVal").textContent = "৳ " + formatBDT(P);
-    $("calcRateVal").textContent   = annualRate.toFixed(2) + "%";
-    $("calcTenorVal").textContent  = years + " " + yearWord;
+    // Legacy display spans (only present if HTML still uses the slider layout)
+    var av = $("calcAmountVal"); if (av) av.textContent = "৳ " + formatBDT(P);
+    var rv = $("calcRateVal");   if (rv) rv.textContent = annualRate.toFixed(2) + "%";
+    var tv = $("calcTenorVal");  if (tv) {
+      var dict = getDict();
+      var yw = years === 1 ? (dict.calc_year || "year") : (dict.calc_years || "years");
+      tv.textContent = years + " " + yw;
+    }
     $("calcEmi").textContent       = "৳ " + formatBDT(emi);
     $("calcInterest").textContent  = "৳ " + formatBDT(totalInterest);
     $("calcTotal").textContent     = "৳ " + formatBDT(totalPayment);
@@ -110,10 +112,13 @@
   }
   function initAutoComma() {
     $$('#loanForm input[inputmode="numeric"]').forEach(function (el) {
-      // skip DOB day/year (small numbers, no commas)
       if (el.name === "dobDay" || el.name === "dobYear") return;
       attachAutoComma(el);
     });
+    var calcAmount = $("calcAmount");
+    if (calcAmount && calcAmount.tagName === "INPUT" && calcAmount.type === "text") {
+      attachAutoComma(calcAmount);
+    }
   }
 
   // ============ URL params → hidden inputs + chip + title mode ============
@@ -246,24 +251,33 @@
       yearSel.appendChild(yOpt);
     }
 
-    // Day starts blank too. Once both Month and Year are picked, populate 1..N.
+    // Day is always available (1..31 by default). Once Month is picked, the
+    // range narrows to that month's max; once Year is also picked, leap-year
+    // is honored. Previously-selected day is clamped if it no longer fits.
     function updateDays() {
       var prevDay = parseInt(daySel.value, 10);
+      var maxDay = 31;
+      if (monthSel.value) {
+        var month = parseInt(monthSel.value, 10);
+        if (yearSel.value) {
+          var year = parseInt(yearSel.value, 10);
+          maxDay = new Date(year, month, 0).getDate();
+        } else {
+          // No year picked yet — use the month's "max possible" (29 for Feb)
+          if (month === 2) maxDay = 29;
+          else if ([4, 6, 9, 11].indexOf(month) >= 0) maxDay = 30;
+        }
+      }
       daySel.innerHTML = "";
       daySel.appendChild(blankOption());
-      if (!monthSel.value || !yearSel.value) return; // keep blank until both picked
-      var month = parseInt(monthSel.value, 10);
-      var year  = parseInt(yearSel.value, 10);
-      var daysInMonth = new Date(year, month, 0).getDate();
-      for (var d = 1; d <= daysInMonth; d++) {
+      for (var d = 1; d <= maxDay; d++) {
         var dOpt = document.createElement("option");
         dOpt.value = pad(d);
         dOpt.textContent = String(d);
         daySel.appendChild(dOpt);
       }
-      // Restore previous selection (clamped to new month's max)
       if (prevDay && !isNaN(prevDay)) {
-        var newDay = Math.min(prevDay, daysInMonth);
+        var newDay = Math.min(prevDay, maxDay);
         daySel.value = pad(newDay);
       }
     }
@@ -289,7 +303,8 @@
     var md = today.getMonth() - dob.getMonth();
     if (md < 0 || (md === 0 && today.getDate() < dob.getDate())) age--;
     if (age < 18 || age > 100) {
-      return { ok: false, focus: dobYear, msg: "Applicant must be at least 18 years old." };
+      var dict = getDict();
+      return { ok: false, focus: dobYear, msg: dict.dob_age_required || "Applicants must be at least 18 years of age to submit this loan application." };
     }
     return { ok: true };
   }
@@ -473,15 +488,11 @@
     var calcTenor   = $("calcTenor");
     var calcRate    = $("calcRate");
     if (calcAmount && amountField) {
-      var amt = parseInt((amountField.value || "").replace(/,/g, ""), 10) || 0;
-      // clamp to slider's max
-      var maxA = parseFloat(calcAmount.max) || amt;
-      calcAmount.value = Math.min(amt, maxA);
+      calcAmount.value = amountField.value || "";
+      calcAmount.dispatchEvent(new Event("input", { bubbles: true }));
     }
     if (calcTenor && tenorField) {
-      var t = parseInt((tenorField.value || "").replace(/,/g, ""), 10) || 0;
-      var maxT = parseFloat(calcTenor.max) || t;
-      calcTenor.value = Math.min(t, maxT);
+      calcTenor.value = (tenorField.value || "").replace(/,/g, "");
     }
     if (calcRate) calcRate.value = RATE;
     calcEMI();
@@ -550,10 +561,19 @@
       titleEl.setAttribute("data-i18n", "app_submitted_title");
       titleEl.textContent = dict.app_submitted_title || "Application Submitted";
       var amountText = formatBDT(result.amount || 0);
-      var tpl = dict.eligibility_eligible_html ||
-        "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
+      // Eligible at requested → "requested loan amount of BDT X"
+      // Reduced (eligible < requested) → "a loan amount of BDT X"
+      var tplKey, tplFallback;
+      if (result.status === "eligible") {
+        tplKey = "eligibility_eligible_html";
+        tplFallback = "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
+      } else {
+        tplKey = "eligibility_reduced_html";
+        tplFallback = "Congratulations, you are eligible for a loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
+      }
+      var tpl = dict[tplKey] || tplFallback;
       msgEl.removeAttribute("data-i18n");
-      msgEl.setAttribute("data-i18n-html", "eligibility_eligible_html");
+      msgEl.setAttribute("data-i18n-html", tplKey);
       msgEl.dataset.amount = amountText;
       msgEl.innerHTML = tpl.replace("{amount}", amountText);
       if (tracking) tracking.hidden = false;

@@ -1458,6 +1458,33 @@ body.modal-open { overflow: hidden; }
   padding: 11px 10px;
 }
 
+/* EMI calculator — text inputs (replaces sliders, no upper bound) */
+.product-action-col .calc-widget .calc-group input[type="text"],
+.calc-widget .calc-group input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #f3e2c4;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  background: white;
+  color: var(--idlc-green-dark);
+  letter-spacing: 0.02em;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.product-action-col .calc-widget .calc-group input[type="text"]:focus,
+.calc-widget .calc-group input[type="text"]:focus {
+  outline: none;
+  border-color: var(--idlc-green);
+  box-shadow: 0 0 0 3px rgba(218,31,38,0.12);
+}
+.product-action-col .calc-widget .calc-group input[type="text"]::placeholder,
+.calc-widget .calc-group input[type="text"]::placeholder {
+  color: #c9b894;
+  font-weight: 500;
+}
+
 /* Anchor target for post-OTP scroll: top of the application-form card */
 .loan-form-card { scroll-margin-top: 70px; }
 
