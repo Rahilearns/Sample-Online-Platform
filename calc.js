@@ -214,6 +214,8 @@
   }
 
   // ============ DOB (3 dropdowns) — populate + dynamic day clamping ============
+  // All three start blank. Day options are only populated once both Month and Year
+  // are picked; selecting an out-of-range day in a new month auto-clamps it.
   function initDobDropdowns() {
     var daySel   = document.querySelector('#otpForm select[name="dobDay"]');
     var monthSel = document.querySelector('#otpForm select[name="dobMonth"]');
@@ -222,12 +224,21 @@
 
     function pad(n) { return n < 10 ? "0" + n : String(n); }
 
+    function blankOption() {
+      var o = document.createElement("option");
+      o.value = "";
+      o.hidden = true;
+      o.selected = true;
+      return o;
+    }
+
     var today = new Date();
     var maxYear = today.getFullYear() - 18;
     var minYear = today.getFullYear() - 100;
 
-    // Populate Year (most recent first → easier to scroll for adults)
+    // Populate Year (blank default, then most recent → oldest)
     yearSel.innerHTML = "";
+    yearSel.appendChild(blankOption());
     for (var y = maxYear; y >= minYear; y--) {
       var yOpt = document.createElement("option");
       yOpt.value = String(y);
@@ -235,22 +246,26 @@
       yearSel.appendChild(yOpt);
     }
 
-    // Update Day options whenever Month or Year changes
+    // Day starts blank too. Once both Month and Year are picked, populate 1..N.
     function updateDays() {
-      var month = parseInt(monthSel.value, 10) || 1;
-      var year  = parseInt(yearSel.value, 10) || maxYear;
-      var daysInMonth = new Date(year, month, 0).getDate(); // last day of month
-      var prevDay = parseInt(daySel.value, 10) || 1;
+      var prevDay = parseInt(daySel.value, 10);
       daySel.innerHTML = "";
+      daySel.appendChild(blankOption());
+      if (!monthSel.value || !yearSel.value) return; // keep blank until both picked
+      var month = parseInt(monthSel.value, 10);
+      var year  = parseInt(yearSel.value, 10);
+      var daysInMonth = new Date(year, month, 0).getDate();
       for (var d = 1; d <= daysInMonth; d++) {
         var dOpt = document.createElement("option");
         dOpt.value = pad(d);
         dOpt.textContent = String(d);
         daySel.appendChild(dOpt);
       }
-      // Clamp the previous selection to the new month's max day
-      var newDay = Math.min(prevDay, daysInMonth);
-      daySel.value = pad(newDay);
+      // Restore previous selection (clamped to new month's max)
+      if (prevDay && !isNaN(prevDay)) {
+        var newDay = Math.min(prevDay, daysInMonth);
+        daySel.value = pad(newDay);
+      }
     }
     updateDays();
     monthSel.addEventListener("change", updateDays);
@@ -258,12 +273,16 @@
   }
 
   function validateDob(dobDay, dobMonth, dobYear) {
+    if (!dobDay.value || !dobMonth.value || !dobYear.value) {
+      var focusEl = !dobDay.value ? dobDay : (!dobMonth.value ? dobMonth : dobYear);
+      return { ok: false, focus: focusEl, msg: "Please select your date of birth (day, month and year)." };
+    }
     var day   = parseInt(dobDay.value,   10);
     var month = parseInt(dobMonth.value, 10);
     var year  = parseInt(dobYear.value,  10);
     var dob = new Date(year, month - 1, day);
     if (dob.getFullYear() !== year || dob.getMonth() !== month - 1 || dob.getDate() !== day) {
-      return { ok: false, focus: dobDay, msg: "Please enter a valid date of birth." };
+      return { ok: false, focus: dobDay, msg: "Please select a valid date of birth." };
     }
     var today = new Date();
     var age = today.getFullYear() - dob.getFullYear();

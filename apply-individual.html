@@ -95,6 +95,7 @@
       <div class="modal-field">
         <label for="modalMode" data-i18n="modal_financing_label">Financing Mode</label>
         <select id="modalMode">
+          <option value="" hidden selected></option>
           <option value="Conventional" data-i18n="modal_financing_conventional">Conventional Financing</option>
           <option value="Islamic" data-i18n="modal_financing_islamic">Islamic Financing</option>
         </select>
@@ -201,9 +202,14 @@
 
         document.getElementById("modalSketch").innerHTML = SKETCHES[product] || "";
 
-        // Populate Purpose dropdown (no placeholder — first product purpose is the default)
+        // Populate Purpose dropdown — starts blank, only takes a value when the visitor picks
         var sel = document.getElementById("modalPurpose");
         sel.innerHTML = "";
+        var blankP = document.createElement("option");
+        blankP.value = "";
+        blankP.hidden = true;
+        blankP.selected = true;
+        sel.appendChild(blankP);
         (PURPOSES[product] || []).forEach(function (p) {
           var opt = document.createElement("option");
           opt.value = p.value;
@@ -212,7 +218,7 @@
           sel.appendChild(opt);
         });
 
-        // Reset financing mode to first option (Conventional)
+        // Reset financing mode to blank
         document.getElementById("modalMode").selectedIndex = 0;
 
         modal.hidden = false;
