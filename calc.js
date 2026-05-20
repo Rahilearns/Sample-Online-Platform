@@ -213,14 +213,54 @@
     }
   }
 
-  // ============ DOB (3 fields) validation helper ============
+  // ============ DOB (3 dropdowns) — populate + dynamic day clamping ============
+  function initDobDropdowns() {
+    var daySel   = document.querySelector('#otpForm select[name="dobDay"]');
+    var monthSel = document.querySelector('#otpForm select[name="dobMonth"]');
+    var yearSel  = document.querySelector('#otpForm select[name="dobYear"]');
+    if (!daySel || !monthSel || !yearSel) return;
+
+    function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+    var today = new Date();
+    var maxYear = today.getFullYear() - 18;
+    var minYear = today.getFullYear() - 100;
+
+    // Populate Year (most recent first → easier to scroll for adults)
+    yearSel.innerHTML = "";
+    for (var y = maxYear; y >= minYear; y--) {
+      var yOpt = document.createElement("option");
+      yOpt.value = String(y);
+      yOpt.textContent = String(y);
+      yearSel.appendChild(yOpt);
+    }
+
+    // Update Day options whenever Month or Year changes
+    function updateDays() {
+      var month = parseInt(monthSel.value, 10) || 1;
+      var year  = parseInt(yearSel.value, 10) || maxYear;
+      var daysInMonth = new Date(year, month, 0).getDate(); // last day of month
+      var prevDay = parseInt(daySel.value, 10) || 1;
+      daySel.innerHTML = "";
+      for (var d = 1; d <= daysInMonth; d++) {
+        var dOpt = document.createElement("option");
+        dOpt.value = pad(d);
+        dOpt.textContent = String(d);
+        daySel.appendChild(dOpt);
+      }
+      // Clamp the previous selection to the new month's max day
+      var newDay = Math.min(prevDay, daysInMonth);
+      daySel.value = pad(newDay);
+    }
+    updateDays();
+    monthSel.addEventListener("change", updateDays);
+    yearSel.addEventListener("change", updateDays);
+  }
+
   function validateDob(dobDay, dobMonth, dobYear) {
     var day   = parseInt(dobDay.value,   10);
     var month = parseInt(dobMonth.value, 10);
     var year  = parseInt(dobYear.value,  10);
-    if (!day || !month || !year) {
-      return { ok: false, focus: !day ? dobDay : (!month ? dobMonth : dobYear), msg: "Please enter your date of birth (day, month, and year)." };
-    }
     var dob = new Date(year, month - 1, day);
     if (dob.getFullYear() !== year || dob.getMonth() !== month - 1 || dob.getDate() !== day) {
       return { ok: false, focus: dobDay, msg: "Please enter a valid date of birth." };
@@ -242,9 +282,9 @@
 
     var nameInput  = otpForm.querySelector('input[name="name"]');
     var phoneInput = otpForm.querySelector('input[name="phone"]');
-    var dobDay     = otpForm.querySelector('input[name="dobDay"]');
+    var dobDay     = otpForm.querySelector('select[name="dobDay"]');
     var dobMonth   = otpForm.querySelector('select[name="dobMonth"]');
-    var dobYear    = otpForm.querySelector('input[name="dobYear"]');
+    var dobYear    = otpForm.querySelector('select[name="dobYear"]');
     var otpGroup   = otpForm.querySelector(".otp-group");
     var otpBoxes   = otpForm.querySelectorAll(".otp-boxes input");
     var otpError   = otpForm.querySelector(".otp-error");
@@ -299,9 +339,9 @@
 
         if (nameInput) nameInput.setAttribute("readonly", "");
         if (nidInput)  nidInput.setAttribute("readonly", "");
-        if (dobDay)    dobDay.setAttribute("readonly", "");
+        if (dobDay)    dobDay.setAttribute("disabled", "");
         if (dobMonth)  dobMonth.setAttribute("disabled", "");
-        if (dobYear)   dobYear.setAttribute("readonly", "");
+        if (dobYear)   dobYear.setAttribute("disabled", "");
         phoneInput.setAttribute("readonly", "");
         otpGroup.hidden = false;
         otpError.hidden = true;
@@ -323,9 +363,10 @@
               }
             });
             loanForm.dispatchEvent(new Event("input", { bubbles: true }));
-            var firstField = loanForm.querySelector(".form-group");
+            // Scroll to the TOP of the application-form card (h2 "Application Form")
+            var formCard = loanForm.closest(".loan-form-card") || loanForm.parentElement;
             setTimeout(function () {
-              if (firstField) firstField.scrollIntoView({ behavior: "smooth", block: "start" });
+              if (formCard) formCard.scrollIntoView({ behavior: "smooth", block: "start" });
               else loanForm.scrollIntoView({ behavior: "smooth", block: "start" });
             }, 80);
           }
@@ -562,6 +603,7 @@
       });
     }
     applyPlaceholderTranslations();
+    initDobDropdowns();
     initOtpFlow();
     initBurdenToggle();
     initInfoButtons();

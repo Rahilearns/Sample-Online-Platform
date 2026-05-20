@@ -1447,17 +1447,19 @@ body.modal-open { overflow: hidden; }
   grid-column: 1 / -1;
 }
 
-/* Date of Birth: 3 inline fields (day | month | year) */
+/* Date of Birth: 3 equal-width dropdowns (day | month | year) */
 .dob-group {
   display: grid;
-  grid-template-columns: 70px 1fr 90px;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
 }
-.dob-group input,
 .dob-group select {
   width: 100%;
   padding: 11px 10px;
 }
+
+/* Anchor target for post-OTP scroll: top of the application-form card */
+.loan-form-card { scroll-margin-top: 70px; }
 
 /* Success panel — warning variant for ineligible applications */
 .form-success.is-warning {

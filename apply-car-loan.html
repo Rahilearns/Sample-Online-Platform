@@ -163,9 +163,8 @@
                 <button type="button" class="info-btn" data-info="info_dob" aria-label="More info">i</button>
               </div>
               <div class="dob-group">
-                <input type="text" inputmode="numeric" name="dobDay" data-i18n-placeholder="dob_day" placeholder="Day" pattern="[0-9]{1,2}" maxlength="2" required />
+                <select name="dobDay" required></select>
                 <select name="dobMonth" required>
-                  <option value="" data-i18n="dob_month_select">Month</option>
                   <option value="01" data-i18n="month_jan">January</option>
                   <option value="02" data-i18n="month_feb">February</option>
                   <option value="03" data-i18n="month_mar">March</option>
@@ -179,7 +178,7 @@
                   <option value="11" data-i18n="month_nov">November</option>
                   <option value="12" data-i18n="month_dec">December</option>
                 </select>
-                <input type="text" inputmode="numeric" name="dobYear" data-i18n-placeholder="dob_year" placeholder="Year" pattern="[0-9]{4}" maxlength="4" required />
+                <select name="dobYear" required></select>
               </div>
             </div>
 
