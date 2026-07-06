@@ -250,11 +250,14 @@
                 <button type="button" class="info-btn" data-info="info_profession" aria-label="More info">i</button>
               </div>
               <select name="profession" required>
-                <option value="" data-i18n="form_profession_select">Select...</option>
-                <option value="salaried" data-i18n="form_profession_salaried">Salaried</option>
-                <option value="business" data-i18n="form_profession_business">Business Owner</option>
-                <option value="self"     data-i18n="form_profession_self">Self-Employed</option>
-                <option value="other"    data-i18n="form_profession_other">Other</option>
+                <option value="" hidden selected></option>
+                <option value="salaried-govt"    data-i18n="form_profession_salaried_govt">Salaried Person (Government)</option>
+                <option value="salaried-private" data-i18n="form_profession_salaried_private">Salaried Person (Private)</option>
+                <option value="self-employed"    data-i18n="form_profession_self_employed">Self Employed</option>
+                <option value="landlord"         data-i18n="form_profession_landlord">Landlord</option>
+                <option value="nrb-service"      data-i18n="form_profession_nrb_service">Service Holder (Non-resident Bangladeshi)</option>
+                <option value="businessperson"   data-i18n="form_profession_businessperson">Businessperson</option>
+                <option value="nrb-business"     data-i18n="form_profession_nrb_business">Businessperson (Non-resident Bangladeshi)</option>
               </select>
             </div>
 
