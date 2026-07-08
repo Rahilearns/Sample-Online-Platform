@@ -8,10 +8,31 @@
     cif: "553577",
     email: "Imahfuzul@gmail.com"
   };
-  // Eligibility rules
+  // Eligibility rules — DBR (Debt Burden Ratio) engine
   var RATE = 13;             // annual % for eligibility + applicant-side EMI projection
-  var THRESHOLD = 0.70;      // total monthly load must be <= 70% of monthly income
-  var MIN_LOAN = 2500000;    // BDT 25 lakh — minimum proposed loan if requested exceeds eligibility
+  var REGRET_RATIO = 0.10;   // offer below 10% of the requested amount → regret message
+  // Max allowable DBR by profession group and monthly income band.
+  // Bands are [upper bound (inclusive), DBR]; income above the last finite bound
+  // falls into the Infinity band.
+  var DBR_BANDS = {
+    A: [[60000, 0.45], [100000, 0.55], [Infinity, 0.60]], // Salaried (Govt.), Salaried (Private), Self Employed
+    B: [[60000, 0.45], [100000, 0.50], [Infinity, 0.55]], // Landlord, Service Holder (NRB)
+    C: [[100000, 0.45], [Infinity, 0.55]]                 // Businessperson, Businessperson (NRB)
+  };
+  var PROFESSION_GROUP = {
+    "salaried-govt": "A", "salaried-private": "A", "self-employed": "A",
+    "landlord": "B", "nrb-service": "B",
+    "businessperson": "C", "nrb-business": "C"
+  };
+  function lookupDbr(profession, income) {
+    var group = PROFESSION_GROUP[profession];
+    if (!group || income <= 0) return null;
+    var bands = DBR_BANDS[group];
+    for (var i = 0; i < bands.length; i++) {
+      if (income <= bands[i][0]) return bands[i][1];
+    }
+    return null;
+  }
 
   function $(id) { return document.getElementById(id); }
   function $$(sel) { return document.querySelectorAll(sel); }
@@ -31,6 +52,50 @@
     var rest = s.slice(0, -3);
     rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
     return rest + "," + lastThree;
+  }
+
+  // ---- Amount in words (Indian numbering: crore / lakh / thousand) ----
+  var EN_ONES = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+    "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+  var EN_TENS = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+  function enBelowHundred(n) {
+    if (n < 20) return EN_ONES[n];
+    return EN_TENS[Math.floor(n / 10)] + (n % 10 ? " " + EN_ONES[n % 10] : "");
+  }
+  function enWords(n) {
+    if (n === 0) return "Zero";
+    var parts = [];
+    if (n >= 1e7)  { parts.push(enWords(Math.floor(n / 1e7)) + " Crore"); n %= 1e7; }
+    if (n >= 1e5)  { parts.push(enBelowHundred(Math.floor(n / 1e5)) + " Lakh"); n %= 1e5; }
+    if (n >= 1000) { parts.push(enBelowHundred(Math.floor(n / 1000)) + " Thousand"); n %= 1000; }
+    if (n >= 100)  { parts.push(EN_ONES[Math.floor(n / 100)] + " Hundred"); n %= 100; }
+    if (n > 0) parts.push(enBelowHundred(n));
+    return parts.join(" ");
+  }
+  var BN_BELOW_HUNDRED = ["শূন্য", "এক", "দুই", "তিন", "চার", "পাঁচ", "ছয়", "সাত", "আট", "নয়", "দশ",
+    "এগারো", "বারো", "তেরো", "চৌদ্দ", "পনেরো", "ষোলো", "সতেরো", "আঠারো", "উনিশ", "বিশ",
+    "একুশ", "বাইশ", "তেইশ", "চব্বিশ", "পঁচিশ", "ছাব্বিশ", "সাতাশ", "আঠাশ", "ঊনত্রিশ", "ত্রিশ",
+    "একত্রিশ", "বত্রিশ", "তেত্রিশ", "চৌত্রিশ", "পঁয়ত্রিশ", "ছত্রিশ", "সাঁইত্রিশ", "আটত্রিশ", "ঊনচল্লিশ", "চল্লিশ",
+    "একচল্লিশ", "বিয়াল্লিশ", "তেতাল্লিশ", "চুয়াল্লিশ", "পঁয়তাল্লিশ", "ছেচল্লিশ", "সাতচল্লিশ", "আটচল্লিশ", "ঊনপঞ্চাশ", "পঞ্চাশ",
+    "একান্ন", "বায়ান্ন", "তিপ্পান্ন", "চুয়ান্ন", "পঞ্চান্ন", "ছাপ্পান্ন", "সাতান্ন", "আটান্ন", "ঊনষাট", "ষাট",
+    "একষট্টি", "বাষট্টি", "তেষট্টি", "চৌষট্টি", "পঁয়ষট্টি", "ছেষট্টি", "সাতষট্টি", "আটষট্টি", "ঊনসত্তর", "সত্তর",
+    "একাত্তর", "বাহাত্তর", "তিয়াত্তর", "চুয়াত্তর", "পঁচাত্তর", "ছিয়াত্তর", "সাতাত্তর", "আটাত্তর", "ঊনআশি", "আশি",
+    "একাশি", "বিরাশি", "তিরাশি", "চুরাশি", "পঁচাশি", "ছিয়াশি", "সাতাশি", "আটাশি", "ঊননব্বই", "নব্বই",
+    "একানব্বই", "বিরানব্বই", "তিরানব্বই", "চুরানব্বই", "পঁচানব্বই", "ছিয়ানব্বই", "সাতানব্বই", "আটানব্বই", "নিরানব্বই"];
+  function bnWords(n) {
+    if (n === 0) return BN_BELOW_HUNDRED[0];
+    var parts = [];
+    if (n >= 1e7)  { parts.push(bnWords(Math.floor(n / 1e7)) + " কোটি"); n %= 1e7; }
+    if (n >= 1e5)  { parts.push(BN_BELOW_HUNDRED[Math.floor(n / 1e5)] + " লাখ"); n %= 1e5; }
+    if (n >= 1000) { parts.push(BN_BELOW_HUNDRED[Math.floor(n / 1000)] + " হাজার"); n %= 1000; }
+    if (n >= 100)  { parts.push(BN_BELOW_HUNDRED[Math.floor(n / 100)] + " শত"); n %= 100; }
+    if (n > 0) parts.push(BN_BELOW_HUNDRED[n]);
+    return parts.join(" ");
+  }
+  function amountInWords(n, lang) {
+    n = Math.floor(n);
+    if (lang === "bn") return bnWords(n) + " টাকা মাত্র";
+    return "Taka " + enWords(n) + " Only";
   }
 
   // EMI: P × r × (1+r)^n / ((1+r)^n − 1)  — zero-safe
@@ -506,46 +571,70 @@
     if (ten) ten.addEventListener("input", syncCalcFromForm);
   }
 
-  // ============ Eligibility check on Submit ============
+  // ============ Eligibility check on Submit (DBR engine) ============
+  // 1. Look up max allowable DBR from the matrix (profession × income band).
+  // 2. Max total EMI = DBR × income; headroom for the new EMI = that minus existing burden.
+  // 3. Back-calculate the max eligible principal at RATE over the requested tenure.
+  // 4. Requested ≤ max → approve requested; otherwise offer the max —
+  //    unless the max is below REGRET_RATIO of the requested amount → regret.
   function checkEligibility(form) {
     function num(name) {
       var el = form.querySelector('input[name="' + name + '"]');
       if (!el) return 0;
       return parseInt((el.value || "0").replace(/,/g, ""), 10) || 0;
     }
-    var income          = num("income");
-    var burdenChecked   = form.querySelector('input[name="hasBurden"]:checked');
-    var hasBurden       = burdenChecked && burdenChecked.value === "yes";
-    var monthlyBurden   = hasBurden ? num("loanBurden") : 0;
-    var expectedAmount  = num("amount");
-    var years           = num("tenor");
-    var maxLoad         = income * THRESHOLD;
+    var professionEl  = form.querySelector('select[name="profession"]');
+    var profession    = professionEl ? professionEl.value : "";
+    var income        = num("income");
+    var burdenChecked = form.querySelector('input[name="hasBurden"]:checked');
+    var hasBurden     = burdenChecked && burdenChecked.value === "yes";
+    var monthlyBurden = hasBurden ? num("loanBurden") : 0;
+    var requested     = num("amount");
+    var years         = num("tenor");
 
-    // Even before computing new EMI, if existing burden already exceeds 70%, reject
-    if (monthlyBurden > maxLoad) return { status: "over_burden" };
+    var dbr = lookupDbr(profession, income);
+    if (dbr == null) return { status: "ineligible" };
 
-    var newEmi    = computeEMI(expectedAmount, RATE, years);
-    var totalLoad = newEmi + monthlyBurden;
+    var maxNewEmi = dbr * income - monthlyBurden;
+    if (maxNewEmi <= 0) return { status: "ineligible" };
 
-    if (totalLoad <= maxLoad) {
-      return { status: "eligible", amount: expectedAmount };
+    var maxLoan = Math.floor(computeMaxLoan(maxNewEmi, RATE, years));
+    if (maxLoan <= 0 || maxLoan < requested * REGRET_RATIO) {
+      return { status: "ineligible" };
     }
-
-    // Requested amount is too high. Find the max loan that still fits the threshold.
-    var roomForNewEmi = maxLoad - monthlyBurden;
-    if (roomForNewEmi <= 0) return { status: "over_burden" };
-
-    var maxLoan = computeMaxLoan(roomForNewEmi, RATE, years);
-    maxLoan = Math.floor(maxLoan / 1000) * 1000;  // round down to nearest BDT 1,000
-
-    if (maxLoan >= MIN_LOAN) {
-      return { status: "reduced", amount: maxLoan };
+    if (requested <= maxLoan) {
+      return { status: "eligible", amount: requested };
     }
-    return { status: "ineligible" };
+    return { status: "reduced", amount: maxLoan };
   }
 
   var SVG_OK = '<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>';
   var SVG_WARN = '<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L1 21h22L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="12" y1="17" x2="12" y2="17.5"/></svg>';
+
+  // Result of the last submission, kept so the message (amount + amount-in-words)
+  // can be re-rendered in the newly selected language on toggle.
+  var lastResult = null;
+
+  function renderResultMessage() {
+    if (!lastResult) return;
+    if (lastResult.status !== "eligible" && lastResult.status !== "reduced") return;
+    var msgEl = $("formSuccessMsg");
+    if (!msgEl) return;
+    var dict = getDict();
+    var lang = document.documentElement.getAttribute("lang") || "en";
+    var tplKey, tplFallback;
+    if (lastResult.status === "eligible") {
+      tplKey = "eligibility_eligible_html";
+      tplFallback = "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong> ({amount_words}), subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
+    } else {
+      tplKey = "eligibility_reduced_html";
+      tplFallback = "Congratulations, you are eligible for a maximum loan amount of BDT <strong>{amount}</strong> ({amount_words}) from IDLC, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
+    }
+    var tpl = dict[tplKey] || tplFallback;
+    msgEl.innerHTML = tpl
+      .replace("{amount}", formatBDT(lastResult.amount || 0))
+      .replace("{amount_words}", amountInWords(lastResult.amount || 0, lang));
+  }
 
   function showResult(form, result) {
     var dict = getDict();
@@ -554,33 +643,23 @@
     var msgEl   = $("formSuccessMsg");
     var iconEl  = $("formSuccessIcon");
     var tracking= $("formSuccessTracking");
+    lastResult = result;
 
     if (result.status === "eligible" || result.status === "reduced") {
       success.classList.remove("is-warning");
       iconEl.innerHTML = SVG_OK;
       titleEl.setAttribute("data-i18n", "app_submitted_title");
       titleEl.textContent = dict.app_submitted_title || "Application Submitted";
-      var amountText = formatBDT(result.amount || 0);
-      // Eligible at requested → "requested loan amount of BDT X"
-      // Reduced (eligible < requested) → "a loan amount of BDT X"
-      var tplKey, tplFallback;
-      if (result.status === "eligible") {
-        tplKey = "eligibility_eligible_html";
-        tplFallback = "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
-      } else {
-        tplKey = "eligibility_reduced_html";
-        tplFallback = "Congratulations, you are eligible for a loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.";
-      }
-      var tpl = dict[tplKey] || tplFallback;
+      // No data-i18n-html here: the message carries substituted values, so it is
+      // re-rendered by renderResultMessage() on language toggle instead.
       msgEl.removeAttribute("data-i18n");
-      msgEl.setAttribute("data-i18n-html", tplKey);
-      msgEl.dataset.amount = amountText;
-      msgEl.innerHTML = tpl.replace("{amount}", amountText);
+      msgEl.removeAttribute("data-i18n-html");
+      renderResultMessage();
       if (tracking) tracking.hidden = false;
       var trackCode = $("trackingNumber");
       if (trackCode) trackCode.textContent = generateTrackingNumber();
     } else {
-      // over_burden or ineligible — show warning state
+      // ineligible — show warning state with the regret message
       success.classList.add("is-warning");
       iconEl.innerHTML = SVG_WARN;
       titleEl.setAttribute("data-i18n", "app_ineligible_title");
@@ -637,6 +716,7 @@
           setTimeout(function () {
             calcEMI();
             applyPlaceholderTranslations();
+            renderResultMessage();
           }, 60);
         });
       });

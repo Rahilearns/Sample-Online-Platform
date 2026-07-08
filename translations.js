@@ -136,8 +136,8 @@ window.TRANSLATIONS = {
     // Eligibility result messages
     app_submitted_title: "Application Submitted",
     app_ineligible_title: "Application Could Not Be Processed",
-    eligibility_eligible_html: "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.",
-    eligibility_reduced_html: "Congratulations, you are eligible for a loan amount of BDT <strong>{amount}</strong>, subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.",
+    eligibility_eligible_html: "Congratulations, you are eligible for the requested loan amount of BDT <strong>{amount}</strong> ({amount_words}), subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.",
+    eligibility_reduced_html: "Congratulations, the maximum loan amount IDLC can offer you is BDT <strong>{amount}</strong> ({amount_words}), subject to authenticity of your given information, further credit assessment from IDLC, and authenticity &amp; validity of the required documents.",
     eligibility_ineligible: "Your monthly income will not cover your loan burden and IDLC's risk appetite. We are unable to process this application at the requested amount.",
     dob_age_required: "Applicants must be at least 18 years of age to submit this loan application.",
 
@@ -450,8 +450,8 @@ window.TRANSLATIONS = {
     // Eligibility result messages
     app_submitted_title: "আবেদন জমা দেওয়া হয়েছে",
     app_ineligible_title: "আবেদন প্রক্রিয়া করা যায়নি",
-    eligibility_eligible_html: "অভিনন্দন, আপনি অনুরোধকৃত BDT <strong>{amount}</strong> ঋণের পরিমাণের জন্য যোগ্য, আপনার প্রদত্ত তথ্যের সত্যতা, আইডিএলসি-র আরও ক্রেডিট মূল্যায়ন, এবং প্রয়োজনীয় কাগজপত্রের সত্যতা ও বৈধতা সাপেক্ষে।",
-    eligibility_reduced_html: "অভিনন্দন, আপনি BDT <strong>{amount}</strong> পরিমাণের ঋণের জন্য যোগ্য, আপনার প্রদত্ত তথ্যের সত্যতা, আইডিএলসি-র আরও ক্রেডিট মূল্যায়ন, এবং প্রয়োজনীয় কাগজপত্রের সত্যতা ও বৈধতা সাপেক্ষে।",
+    eligibility_eligible_html: "অভিনন্দন, আপনি অনুরোধকৃত BDT <strong>{amount}</strong> ({amount_words}) ঋণের পরিমাণের জন্য যোগ্য, আপনার প্রদত্ত তথ্যের সত্যতা, আইডিএলসি-র আরও ক্রেডিট মূল্যায়ন, এবং প্রয়োজনীয় কাগজপত্রের সত্যতা ও বৈধতা সাপেক্ষে।",
+    eligibility_reduced_html: "অভিনন্দন, আইডিএলসি আপনাকে সর্বোচ্চ BDT <strong>{amount}</strong> ({amount_words}) ঋণের পরিমাণ প্রদান করতে পারবে, আপনার প্রদত্ত তথ্যের সত্যতা, আইডিএলসি-র আরও ক্রেডিট মূল্যায়ন, এবং প্রয়োজনীয় কাগজপত্রের সত্যতা ও বৈধতা সাপেক্ষে।",
     eligibility_ineligible: "আপনার মাসিক আয় আপনার ঋণের চাপ ও আইডিএলসি-র ঝুঁকি ক্ষুধা পূরণ করবে না। বর্তমান অনুরোধকৃত পরিমাণে এই আবেদন প্রক্রিয়া করা সম্ভব নয়।",
     dob_age_required: "এই ঋণের আবেদন জমা দেওয়ার জন্য আবেদনকারীর বয়স কমপক্ষে ১৮ বছর হতে হবে।",
 
